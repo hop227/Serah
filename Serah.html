@@ -1,11 +1,664 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl" id="html-tag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پڕۆگرامی فێرکاری الأرجوزة المئية</title>
+    <title>پڕۆگرامی فێرکاری الأرجوزة المئية - ئەکادیمی</title>
     
-    <!-- 1. دڵنیابەرەوە ئەم سکریپتەی Tailwind بە تەواوی ڕاستە -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Robust Compiled Tailwind CSS (Fixes Github Pages rendering bugs) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" integrity="sha512-wnea99cKBU3EIRV383GHvhVR3jhkslT6PzcT21EGv954fcJY33LgQqcdkJy3F9yoR1eVNycA6npfLf48zLpLXCg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <!-- 2. بەستەری فۆنتەکان -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Modern Arabic & Kurdish Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .font-poem {
+            font-family: 'Amiri', serif;
+        }
+        .poem-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 1.5rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed #334155;
+        }
+        .poem-part {
+            flex: 1;
+            text-align: center;
+        }
+        /* Custom modal scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+    </style>
 </head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 text-white p-5 sticky top-0 z-40 shadow-xl">
+        <div class="container mx-auto max-w-3xl flex justify-between items-center">
+            <div>
+                <h1 id="ui-header-title" class="text-xl md:text-2xl font-extrabold tracking-wide text-amber-400">📜 تاقیکردنەوەی الأرجوزة المئية</h1>
+                <p id="ui-header-sub" class="text-slate-400 text-xs md:text-sm mt-0.5">پرسیارەکان + ڕوونکردنەوەی فێرکاری لە ویکیپیدیاوە</p>
+            </div>
+            <span class="text-2xl opacity-75 hidden sm:block">🏛️</span>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto max-w-3xl p-4 my-auto space-y-6">
+        
+        <!-- Welcome Screen -->
+        <div id="welcome-card" class="bg-slate-800 rounded-3xl shadow-2xl p-6 md:p-8 border border-slate-700">
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-amber-500 bg-opacity-10 border border-amber-500 border-opacity-30 flex items-center justify-center text-amber-400 text-3xl">
+                    📜
+                </div>
+            </div>
+
+            <h2 id="ui-welcome-title" class="text-2xl md:text-3xl font-bold mb-3 text-center text-white">بەخێربێیت بۆ بەرنامەی الأرجوزة المئية</h2>
+            <p id="ui-welcome-desc" class="text-slate-300 text-center mb-8 leading-relaxed text-sm md:text-base font-normal max-w-xl mx-auto">
+                زمان، ژمارەی پرسیارەکان دیاری بکە بۆ دەستپێکردنی کویزەکە.
+            </p>
+
+            <!-- Options Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 text-right">
+                
+                <!-- Question Language Selector -->
+                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700">
+                    <label id="ui-lbl-q-lang" class="block font-semibold text-slate-300 mb-2 text-xs md:text-sm">🌐 زمانی پرسیارەکان:</label>
+                    <select id="q-lang-select" class="w-full border border-slate-700 rounded-xl p-3 font-semibold text-white bg-slate-800 focus:outline-none focus:border-amber-500 text-sm transition">
+                        <option value="ckb" selected>کوردی (Kurdish)</option>
+                        <option value="ar">العربية (Arabic)</option>
+                        <option value="en">English (ئینگلیزی)</option>
+                        <option value="fa">فارسی (Persian)</option>
+                        <option value="tr">Türkçe (Turkish)</option>
+                    </select>
+                </div>
+
+                <!-- Explanation Language Selector -->
+                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700">
+                    <label id="ui-lbl-exp-lang" class="block font-semibold text-slate-300 mb-2 text-xs md:text-sm">💡 زمانی ڕوونکردنەوە (ویکیپیدیا):</label>
+                    <select id="exp-lang-select" class="w-full border border-slate-700 rounded-xl p-3 font-semibold text-white bg-slate-800 focus:outline-none focus:border-amber-500 text-sm transition">
+                        <option value="ckb" selected>کوردی (Kurdish)</option>
+                        <option value="ar">العربية (Arabic)</option>
+                        <option value="en">English (ئینگلیزی)</option>
+                        <option value="fa">فارسی (Persian)</option>
+                        <option value="tr">Türkçe (Turkish)</option>
+                    </select>
+                </div>
+
+                <!-- Question Count Selector -->
+                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700 md:col-span-2">
+                    <label id="ui-lbl-count" class="block font-semibold text-slate-300 mb-2 text-xs md:text-sm">🔢 ژمارەی پرسیارەکان:</label>
+                    <select id="question-count-select" class="w-full border border-slate-700 rounded-xl p-3 text-center font-bold text-amber-400 bg-slate-800 focus:outline-none focus:border-amber-500 text-sm transition">
+                        <option value="10">١٠ پرسیار</option>
+                        <option value="20">٢٠ پرسیار</option>
+                        <option value="30">٣٠ پرسیار</option>
+                        <option value="40">٤٠ پرسیار</option>
+                        <option value="50">٥٠ پرسیار</option>
+                        <option value="100">١٠٠ پرسیار</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button id="ui-btn-start" onclick="startQuiz()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-4 px-6 rounded-2xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-base cursor-pointer">
+                    🎯 دەستپێکردنی کویز
+                </button>
+                <button id="ui-btn-poem" onclick="showPoemModal()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-4 px-6 rounded-2xl shadow transition duration-200 flex items-center justify-center gap-2 text-base cursor-pointer">
+                    📜 خوێندنەوەی الأرجوزة
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-card" class="hidden bg-slate-800 rounded-3xl shadow-2xl p-6 md:p-8 border border-slate-700">
+            <!-- Progress Bar -->
+            <div class="flex justify-between items-center mb-4 text-xs md:text-sm font-semibold text-slate-400">
+                <span id="question-tracker" class="bg-slate-900 px-3.5 py-1.5 rounded-xl border border-slate-700 text-slate-300">پرسیاری ١</span>
+                <span id="score-tracker" class="bg-amber-500 bg-opacity-10 border border-amber-500 border-opacity-30 text-amber-400 px-3.5 py-1.5 rounded-xl">نمرە: ٠</span>
+            </div>
+            <div class="w-full bg-slate-900 h-2.5 rounded-full mb-8 overflow-hidden border border-slate-700">
+                <div id="progress-bar" class="bg-amber-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Question -->
+            <h3 id="question-text" class="text-xl md:text-2xl font-bold mb-8 text-white leading-relaxed">
+                پرسیار لێرە دەردەکەوێت...
+            </h3>
+
+            <!-- Options Container -->
+            <div id="options-container" class="space-y-3.5 mb-8"></div>
+
+            <!-- Feedback Message -->
+            <div id="feedback" class="hidden p-4 rounded-2xl mb-6 text-center font-bold text-sm md:text-base"></div>
+
+            <!-- Wiki Explanation Box -->
+            <div id="explanation-box" class="hidden bg-slate-900 border-r-4 border-amber-500 p-5 rounded-2xl mb-8 space-y-3 border border-slate-700">
+                <div class="font-bold text-amber-400 flex items-center gap-2 text-sm md:text-base">
+                    <span id="ui-exp-title">💡 ڕوونکردنەوەی زیاتر (لە ویکیپیدیاوە):</span>
+                </div>
+                <p id="explanation-text" class="text-slate-300 text-sm md:text-base leading-relaxed"></p>
+                
+                <!-- Google Wiki Direct Search Button -->
+                <div id="wiki-google-btn-container" class="hidden pt-3 border-t border-slate-800 mt-3">
+                    <a id="wiki-google-link" href="#" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-5 rounded-xl text-xs md:text-sm shadow-md transition duration-200">
+                        🔍 لە گووگڵ بەسەر ویکیپیدیادا باسی بکە
+                    </a>
+                </div>
+            </div>
+
+            <!-- Next Button -->
+            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-4 rounded-2xl shadow-xl transition duration-200 text-base cursor-pointer">
+                پرسیاری دواتر ⬅️
+            </button>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-card" class="hidden bg-slate-800 rounded-3xl shadow-2xl p-8 text-center border border-slate-700">
+            <div class="text-6xl mb-4" id="result-emoji">🎉</div>
+            <h2 id="ui-result-title" class="text-2xl md:text-3xl font-extrabold text-white mb-2">تاقیکردنەوەکەت تەواو کرد!</h2>
+            <p id="ui-result-desc" class="text-slate-400 mb-8 text-sm md:text-base">ئەمەش ئەنجامی کۆتایی زانیارییەکانتە:</p>
+            
+            <div class="bg-slate-900 rounded-2xl p-6 mb-8 border border-slate-700 max-w-sm mx-auto">
+                <p class="text-5xl font-black text-amber-400 mb-2" id="final-score">٠ / ٠</p>
+                <p class="text-sm font-semibold text-slate-400" id="result-percentage">٠% وەڵامی ڕاست</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button id="ui-btn-restart" onclick="restartQuiz()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 px-8 rounded-2xl shadow transition duration-200 cursor-pointer">
+                    🔄 دووبارەکردنەوە
+                </button>
+                <button id="ui-btn-home" onclick="goHome()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3.5 px-8 rounded-2xl shadow transition duration-200 cursor-pointer">
+                    🏠 پەڕەی سەرەکی
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal for Showing Full Poem -->
+    <div id="poem-modal" class="hidden fixed inset-0 bg-slate-950 bg-opacity-80 flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 rounded-3xl max-w-2xl w-full h-5/6 flex flex-col shadow-2xl border border-slate-700">
+            <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950 rounded-t-3xl">
+                <div>
+                    <h3 class="text-lg font-bold text-amber-400 font-poem">الأرجوزة المئية في ذكر حال أشرف البرية</h3>
+                    <p class="text-xs text-slate-400 mt-1">نظم: القاضي علي بن علي بن أبي العز الحنفي</p>
+                </div>
+                <button onclick="closePoemModal()" class="text-slate-400 hover:text-white font-bold text-2xl px-2 transition cursor-pointer">&times;</button>
+            </div>
+
+            <!-- External Links inside Poem Box -->
+            <div class="bg-slate-950 p-3 border-b border-slate-800 flex flex-wrap gap-2 justify-center text-xs">
+                <a href="https://archive.org/details/100_20200831" target="_blank" class="bg-amber-500 bg-opacity-10 hover:bg-opacity-20 text-amber-400 border border-amber-500 border-opacity-30 font-semibold px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                    📥 داگرتنی فایلی PDF
+                </a>
+                <a href="https://ar.islamway.net/collection/15119" target="_blank" class="bg-green-500 bg-opacity-10 hover:bg-opacity-20 text-green-400 border border-green-500 border-opacity-30 font-semibold px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                    🎧 گوێگرتن لە دەنگ (MP3)
+                </a>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-1 text-center text-slate-200 text-base md:text-lg leading-relaxed space-y-2 font-poem" id="poem-content">
+            </div>
+
+            <div class="p-4 border-t border-slate-800 text-left bg-slate-950 rounded-b-3xl">
+                <button id="ui-btn-close-modal" onclick="closePoemModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-6 rounded-xl text-sm border border-slate-700 cursor-pointer">
+                    داخستن
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="ui-footer" class="bg-slate-950 text-slate-500 text-center py-4 text-xs border-t border-slate-900">
+        درووستکراوە بۆ بڵاوکردنەوەی هۆنراوەی الأرجوزة المئية
+    </footer>
+
+    <script>
+        const translations = {
+            ckb: {
+                dir: "rtl",
+                title: "📜 تاقیکردنەوەی الأرجوزة المئية",
+                sub: "پرسیارەکان + ڕوونکردنەوەی فێرکاری لە ویکیپیدیاوە",
+                welcomeTitle: "بەخێربێیت بۆ بەرنامەی الأرجوزة المئية",
+                welcomeDesc: "زمان، ژمارەی پرسیارەکان دیاری بکە بۆ دەستپێکردنی کویزەکە.",
+                lblQLang: "🌐 زمانی پرسیارەکان:",
+                lblExpLang: "💡 زمانی ڕوونکردنەوە (ویکیپیدیا):",
+                lblCount: "🔢 ژمارەی پرسیارەکان:",
+                btnStart: "🎯 دەستپێکردنی کویز",
+                btnPoem: "📜 خوێندنەوەی الأرجوزة",
+                qTracker: "پرسیاری",
+                scoreTracker: "نمرە",
+                expTitle: "💡 ڕوونکردنەوەی زیاتر (لە ویکیپیدیاوە):",
+                btnNext: "پرسیاری دواتر ⬅️",
+                correctMsg: "✨ وەڵامەکەت تەواوە و ڕاستە.",
+                wrongMsg: "❌ وەڵامەکەت هەڵەیە! وەڵامی ڕاست:",
+                resTitle: "تاقیکردنەوەکەت تەواو کرد!",
+                resDesc: "ئەمەش ئەنجامی کۆتایی زانیارییەکانتە:",
+                btnRestart: "🔄 دووبارەکردنەوە",
+                btnHome: "🏠 پەڕەی سەرەکی",
+                btnCloseModal: "داخستن",
+                footer: "درووستکراوە بۆ بڵاوکردنەوەی هۆنراوەی الأرجوزة المئية",
+                btnWikiGoogle: "🔍 لە گووگڵ بەسەر ویکیپیدیادا باسی بکە"
+            },
+            ar: {
+                dir: "rtl",
+                title: "📜 اختبار الأرجوزة المئية",
+                sub: "الأسئلة + الشرح التعليمي من ويكيبيديا",
+                welcomeTitle: "مرحباً بك في برنامج الأرجوزة المئية",
+                welcomeDesc: "اختر اللغة وعدد الأسئلة للبدء في الاختبار.",
+                lblQLang: "🌐 لغة الأسئلة:",
+                lblExpLang: "💡 لغة الشرح (ويكيبيديا):",
+                lblCount: "🔢 عدد الأسئلة:",
+                btnStart: "🎯 بدء الاختبار",
+                btnPoem: "📜 قراءة الأرجوزة",
+                qTracker: "السؤال",
+                scoreTracker: "النتيجة",
+                expTitle: "💡 شرح إضافي (من ويكيبيديا):",
+                btnNext: "السؤال التالي ⬅️",
+                correctMsg: "✨ إجابة صحيحة وممتازة.",
+                wrongMsg: "❌ إجابة خاطئة! الإجابة الصحيحة هي:",
+                resTitle: "لقد أكملت الاختبار!",
+                resDesc: "هذه هي النتيجة النهائية لمعلوماتك:",
+                btnRestart: "🔄 إعادة الاختبار",
+                btnHome: "🏠 الصفحة الرئيسية",
+                btnCloseModal: "إغلاق",
+                footer: "تم إنشاؤه لنشر منظومة الأرجوزة المئية",
+                btnWikiGoogle: "🔍 ابحث عن الموضوع في ويكيبيديا عبر جوجل"
+            },
+            en: {
+                dir: "ltr",
+                title: "📜 Al-Arjuzah Al-Maiyyah Quiz",
+                sub: "Questions + Educational explanations from Wikipedia",
+                welcomeTitle: "Welcome to Al-Arjuzah Al-Maiyyah Program",
+                welcomeDesc: "Select language and number of questions to start the quiz.",
+                lblQLang: "🌐 Questions Language:",
+                lblExpLang: "💡 Explanation Language (Wikipedia):",
+                lblCount: "🔢 Number of Questions:",
+                btnStart: "🎯 Start Quiz",
+                btnPoem: "📜 Read Poem",
+                qTracker: "Question",
+                scoreTracker: "Score",
+                expTitle: "💡 Further Explanation (Wikipedia):",
+                btnNext: "Next Question ➡️",
+                correctMsg: "✨ Correct answer!",
+                wrongMsg: "❌ Incorrect answer! Correct answer is:",
+                resTitle: "Quiz Completed!",
+                resDesc: "Here is your final score:",
+                btnRestart: "🔄 Restart",
+                btnHome: "🏠 Home Page",
+                btnCloseModal: "Close",
+                footer: "Created for spreading knowledge of Al-Arjuzah Al-Maiyyah",
+                btnWikiGoogle: "🔍 Read more on Wikipedia via Google"
+            },
+            fa: {
+                dir: "rtl",
+                title: "📜 آزمون منظومه الارجوزة المئية",
+                sub: "سوالات + توضیحات آموزشی از ویکی‌پدیا",
+                welcomeTitle: "به برنامه آزمون الارجوزة المئية خوش آمدید",
+                welcomeDesc: "زبان و تعداد سوالات را برای شروع آزمون انتخاب کنید.",
+                lblQLang: "🌐 زبان سوالات:",
+                lblExpLang: "💡 زبان توضیحات (ویکی‌پدیا):",
+                lblCount: "🔢 تعداد سوالات:",
+                btnStart: "🎯 شروع آزمون",
+                btnPoem: "📜 خواندن منظومه",
+                qTracker: "سوال",
+                scoreTracker: "امتیاز",
+                expTitle: "💡 توضیحات بیشتر (از ویکی‌پدیای فارسی):",
+                btnNext: "سوال بعدی ⬅️",
+                correctMsg: "✨ پاسخ شما کاملاً درست است.",
+                wrongMsg: "❌ پاسخ اشتباه است! پاسخ درست:",
+                resTitle: "آزمون را به پایان رساندید!",
+                resDesc: "این نتیجه نهایی دانش شماست:",
+                btnRestart: "🔄 تکرار آزمون",
+                btnHome: "🏠 صفحه اصلی",
+                btnCloseModal: "بستن",
+                footer: "طراحی شده برای انتشار منظومه الارجوزة المئية",
+                btnWikiGoogle: "🔍 جستجوی موضوع در ویکی‌پدیا از طریق گوگل"
+            },
+            tr: {
+                dir: "ltr",
+                title: "📜 El-Ürcüzetü'l-Meiyye Testi",
+                sub: "Sorular + Vikipedi'den eğitici açıklamalar",
+                welcomeTitle: "El-Ürcüzetü'l-Meiyye Programına Hoş Geldiniz",
+                welcomeDesc: "Teste başlamak için dili ve soru sayısını seçin.",
+                lblQLang: "🌐 Soru Dili:",
+                lblExpLang: "💡 Açıklama Dili (Vikipedi):",
+                lblCount: "🔢 Soru Sayısı:",
+                btnStart: "🎯 Testi Başlat",
+                btnPoem: "📜 Kasideyi Oku",
+                qTracker: "Soru",
+                scoreTracker: "Puan",
+                expTitle: "💡 Detaylı Açıklama (Vikipedi):",
+                btnNext: "Sonraki Soru ➡️",
+                correctMsg: "✨ Doğru cevap!",
+                wrongMsg: "❌ Yanlış cevap! Doğru cevap:",
+                resTitle: "Testi Tamamladınız!",
+                resDesc: "İşte nihai sonucunuz:",
+                btnRestart: "🔄 Yeniden Başlat",
+                btnHome: "🏠 Ana Sayfa",
+                btnCloseModal: "Kapat",
+                footer: "El-Ürcüzetü'l-Meiyye şiirini yaymak için oluşturulmuştur",
+                btnWikiGoogle: "🔍 Google üzerinden Vikipedi'de oku"
+            }
+        };
+
+        const poemLines = [
+            ["الْحَمْدُ لِلَّهِ الْقَدِيمِ الْبَارِي", "ثُمَّ الصَّلَاةُ وَالسَّلَامُ السَّارِي"],
+            ["عَلَى رَسُولِ اللَّهِ خَيْرِ الْخَلْقِ", "وَآلِهِ وَصَحْبِهِ وَالْحَقِّ"],
+            ["مَوْلِدُهُ فِي عَامِ الْفِيلِ زَكَا", "فِي يَوْمِ الْاثْنَيْنِ الرَّبِيعِيِّ حَكَى"],
+            ["وَبَعْدَ سِتٍّ مَاتَتِ الأُمُّ الرَّؤُوفُ", "فَكِفْلُ جَدِّهِ لَهُ شَيْءٌ طَرِيفٌ"],
+            ["وَبَعْدَهُمَا الإِسْرَاءُ وَالْمِعْرَاجُ", "وَفَرْضُ خَمْسِ صَلَوَاتٍ تُعَاجُ"]
+        ];
+
+        const poemQuestions = [
+            { 
+                q: {
+                    ckb: "کێ دانەری هۆنراوەی «الأرجوزة المئية»یە؟",
+                    ar: "من هو مؤلف منظومة «الأرجوزة المئية»؟",
+                    en: "Who is the author of 'Al-Arjuzah Al-Maiyyah'?",
+                    fa: "شاعر منظومه «الارجوزة المئية» چه کسی است؟",
+                    tr: "'El-Ürcüzetü'l-Meiyye' manzumesinin müellifi kimdir?"
+                },
+                opts: {
+                    ckb: ["ابن أبي العز الحنفي", "الإمام النووي", "ابن كثير", "ابن حجر"],
+                    ar: ["ابن أبي العز الحنفي", "الإمام النووي", "ابن كثير", "ابن حجر"],
+                    en: ["Ibn Abi al-Izz al-Hanafi", "Imam al-Nawawi", "Ibn Kathir", "Ibn Hajar"],
+                    fa: ["ابن ابی العز الحنفی", "امام نووی", "ابن کثیر", "ابن حجر"],
+                    tr: ["İbn Ebî'l-İzz el-Hanefî", "İmam Nevevî", "İbn Kesîr", "İbn Hacer"]
+                },
+                correctIndex: 0,
+                exp: {
+                    ckb: "بەپێی ویکیپیدیا، ئەم هۆنراوەیە لەلایەن ئیمام (ابن أبي العز الحنفي) دروستکراوە کە پێکهاتووە لە ١٠٠ دێڕە شێعر لەسەر کێشی (الرجز).",
+                    ar: "وفقاً لويكيبيديا، هذه المنظومة من تأليف الإمام ابن أبي العز الحنفي وتتكون من 100 بيت في السيرة النبوية.",
+                    en: "According to Wikipedia, this poem was composed by Imam Ibn Abi al-Izz al-Hanafi, consisting of 100 lines summarizing the Seerah.",
+                    fa: "طبق اطلاعات ویکی‌پدیای فارسی، این منظومه توسط ابن ابی العز الحنفی در ۱۰۰ بیت برای خلاصه‌سازی سیره نبوی سروده شده است.",
+                    tr: "Vikipedi'ye göre bu manzume, İbn Ebî'l-İzz el-Hanefî tarafından Siyer-i Nebî'yi özetleyen 100 beyit halinde kaleme alınmıştır."
+                },
+                wikiQuery: "ابن أبي العز الحنفي الأرجوزة المئية"
+            },
+            { 
+                q: {
+                    ckb: "پێغەمبەر (د.خ) لە چ ساڵێکدا لەدایکبووە بەپێی هۆنراوەکە؟",
+                    ar: "في أي عام ولد النبي ﷺ وفقاً للأرجوزة؟",
+                    en: "In which year was the Prophet ﷺ born according to the poem?",
+                    fa: "پیامبر (ص) طبق این منظومه در چه سالی متولد شد؟",
+                    tr: "Manzumeye göre Hz. Muhammed (s.a.v.) hangi yılda doğmuştur?"
+                },
+                opts: {
+                    ckb: ["ساڵی فیل (عام الفيل)", "ساڵی حزن", "ساڵی فەتح", "ساڵی کۆچی"],
+                    ar: ["عام الفيل", "عام الحزن", "عام الفتح", "عام الهجرة"],
+                    en: ["Year of the Elephant", "Year of Sorrow", "Year of Conquest", "Year of Hijra"],
+                    fa: ["عام الفیل", "عام الحزن", "عام الفتح", "سال هجرت"],
+                    tr: ["Fil Yılı", "Hüzün Yılı", "Fetih Yılı", "Hicret Yılı"]
+                },
+                correctIndex: 0,
+                exp: {
+                    ckb: "شاعیر دەڵێت: (مَوْلِدُهُ فِي عَامِ الْفِيلِ زَكَا)، واتە لە ساڵی فیلدا لەدایکبووە (٥٧١ زیلاینی).",
+                    ar: "يقول الناظم: (مَوْلِدُهُ فِي عَامِ الْفِيلِ زَكَا)، حيث ولد النبي في عام الفيل (571م).",
+                    en: "The poet says: 'His birth was in the Year of the Elephant' (571 CE).",
+                    fa: "شاعر می‌گوید: (مَوْلِدُهُ فِي عَامِ الْفِيلِ زَكَا)، یعنی ولادت ایشان در عام الفیل (۵۷۱ میلادی) بوده است.",
+                    tr: "Şair şöyle der: 'Mevliduhu fî âmil-fîli zekâ', yani Hz. Peygamber Fil Yılı'nda (M. 571) dünyaya gelmiştir."
+                },
+                wikiQuery: "مولد النبي عام الفيل"
+            },
+            { 
+                q: {
+                    ckb: "پێغەمبەر (د.خ) لە چ تەمەنێکدا دایکی کۆچی دوایی کرد؟",
+                    ar: "کم كان عمر النبي ﷺ عند وفاة أمه؟",
+                    en: "How old was the Prophet ﷺ when his mother passed away?",
+                    fa: "پیامبر (ص) در چند سالگی مادر گرامی‌شان را از دست دادند؟",
+                    tr: "Annesi vefat ettiğinde Hz. Peygamber (s.a.v.) kaç yaşındaydı?"
+                },
+                opts: {
+                    ckb: ["٦ ساڵی", "٨ ساڵی", "٤ ساڵی", "١٢ ساڵی"],
+                    ar: ["6 سنوات", "8 سنوات", "4 سنوات", "12 سنة"],
+                    en: ["6 years old", "8 years old", "4 years old", "12 years old"],
+                    fa: ["۶ سالگی", "۸ سالگی", "۴ سالگی", "۱۲ سالگی"],
+                    tr: ["6 yaşında", "8 yaşında", "4 yaşında", "12 yaşında"]
+                },
+                correctIndex: 0,
+                exp: {
+                    ckb: "لە هۆنراوەکەدا هاتووە: (وَبَعْدَ سِتٍّ مَاتَتِ الأُمُّ الرَّؤُوفُ)، واتە لە دوای تەمەنی ٦ ساڵی دایکی کۆچی دوایی کرد.",
+                    ar: "ورد في البيت: (وَبَعْدَ سِتٍّ مَاتَتِ الأُمُّ الرَّؤُوفُ)، أي توفيت أمه آمنة وعمره 6 سنوات.",
+                    en: "The poem states: 'And after six years, the compassionate mother passed away'.",
+                    fa: "در شعر آمده است: (وَبَعْدَ سِتٍّ مَاتَتِ الأُمُّ الرَّؤُوفُ)، یعنی در ۶ سالگی مادر مهربانشان آمنه درگذشت.",
+                    tr: "Şiirde belirtildiği üzere: 'Ve ba'de sittin mâteti'l-ummur-raûf', yani 6 yaşındayken şefkatli annesi Âmine vefat etmiştir."
+                },
+                wikiQuery: "وفاة آمنة بنت وهب أم النبي"
+            },
+            { 
+                q: {
+                    ckb: "پێغەمبەر (د.خ) چەند ساڵ بە نهێنی بانگەوازی کرد؟",
+                    ar: "کم سنة استمرت الدعوة السريّة؟",
+                    en: "How many years did the secret Dawah last?",
+                    fa: "دعوت مخفیانه اسلام چند سال طول کشید؟",
+                    tr: "Gizli davet dönemi kaç yıl sürmüştür?"
+                },
+                opts: {
+                    ckb: ["٣ ساڵ", "٥ ساڵ", "٧ ساڵ", "١٠ ساڵ"],
+                    ar: ["3 سنوات", "5 سنوات", "7 سنوات", "10 سنوات"],
+                    en: ["3 years", "5 years", "7 years", "10 years"],
+                    fa: ["۳ سال", "۵ سال", "۷ سال", "۱۰ سال"],
+                    tr: ["3 yıl", "5 yıl", "7 yıl", "10 yıl"]
+                },
+                correctIndex: 0,
+                exp: {
+                    ckb: "بەپێی ویکیپیدیا، بانگەوازی ئیسلام ٣ ساڵی یەکەم بە نهێنی بوو (ثُمَّ دَعَا ثَلَاثَ سِنِينَ سِرَّا).",
+                    ar: "استمرت الدعوة السرية في مكة المكرمة لمدة ثلاث سنوات كما ذكر الناظم (ثُمَّ دَعَا ثَلَاثَ سِنِينَ سِرَّا).",
+                    en: "The secret call to Islam lasted for 3 years before going public.",
+                    fa: "طبق منابع تاریخی، دعوت پنهانی در مکه ۳ سال به طول انجامید (ثُمَّ دَعَا ثَلَاثَ سِنِينَ سِرَّا).",
+                    tr: "Tarihi kaynaklara göre Mekke'deki gizli davet 3 yıl sürmüştür (Şair: 'Summe deâ selâse sinîne sirrâ')."
+                },
+                wikiQuery: "الدعوة السرية في الإسلام"
+            }
+        ];
+
+        let selectedQLang = "ckb";
+        let selectedExpLang = "ckb";
+        let activeQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function updateUI() {
+            selectedQLang = document.getElementById('q-lang-select').value;
+            selectedExpLang = document.getElementById('exp-lang-select').value;
+            const t = translations[selectedQLang];
+
+            document.getElementById('html-tag').dir = t.dir;
+            document.getElementById('ui-header-title').innerText = t.title;
+            document.getElementById('ui-header-sub').innerText = t.sub;
+            document.getElementById('ui-welcome-title').innerText = t.welcomeTitle;
+            document.getElementById('ui-welcome-desc').innerText = t.welcomeDesc;
+            document.getElementById('ui-lbl-q-lang').innerText = t.lblQLang;
+            document.getElementById('ui-lbl-exp-lang').innerText = t.lblExpLang;
+            document.getElementById('ui-lbl-count').innerText = t.lblCount;
+            document.getElementById('ui-btn-start').innerText = t.btnStart;
+            document.getElementById('ui-btn-poem').innerText = t.btnPoem;
+            document.getElementById('ui-exp-title').innerText = translations[selectedExpLang].expTitle;
+            document.getElementById('next-btn').innerText = t.btnNext;
+            document.getElementById('ui-result-title').innerText = t.resTitle;
+            document.getElementById('ui-result-desc').innerText = t.resDesc;
+            document.getElementById('ui-btn-restart').innerText = t.btnRestart;
+            document.getElementById('ui-btn-home').innerText = t.btnHome;
+            document.getElementById('ui-btn-close-modal').innerText = t.btnCloseModal;
+            document.getElementById('ui-footer').innerText = t.footer;
+            document.getElementById('wiki-google-link').innerText = t.btnWikiGoogle;
+        }
+
+        document.getElementById('q-lang-select').addEventListener('change', updateUI);
+        document.getElementById('exp-lang-select').addEventListener('change', updateUI);
+
+        function startQuiz() {
+            updateUI();
+            const count = parseInt(document.getElementById('question-count-select').value);
+            
+            activeQuestions = [];
+            for (let i = 0; i < count; i++) {
+                const baseQ = poemQuestions[i % poemQuestions.length];
+                activeQuestions.push({
+                    question: baseQ.q[selectedQLang] || baseQ.q['ckb'],
+                    options: baseQ.opts[selectedQLang] || baseQ.opts['ckb'],
+                    correctIndex: baseQ.correctIndex,
+                    explanation: baseQ.exp[selectedExpLang] || baseQ.exp['ckb'],
+                    wikiQuery: baseQ.wikiQuery
+                });
+            }
+
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('welcome-card').classList.add('hidden');
+            document.getElementById('result-card').classList.add('hidden');
+            document.getElementById('quiz-card').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = activeQuestions[currentQuestionIndex];
+            const t = translations[selectedQLang];
+
+            document.getElementById('question-text').innerText = q.question;
+            document.getElementById('question-tracker').innerText = `${t.qTracker} ${currentQuestionIndex + 1} / ${activeQuestions.length}`;
+            document.getElementById('score-tracker').innerText = `${t.scoreTracker}: ${score}`;
+            
+            const progress = ((currentQuestionIndex + 1) / activeQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('explanation-box').classList.add('hidden');
+            document.getElementById('wiki-google-btn-container').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full border border-slate-700 rounded-2xl p-4 md:p-5 font-semibold transition duration-200 flex items-center justify-between bg-slate-900 hover:bg-slate-700 text-slate-200 text-sm md:text-base cursor-pointer";
+                
+                if(selectedQLang === 'en' || selectedQLang === 'tr') {
+                    btn.classList.add('text-left');
+                } else {
+                    btn.classList.add('text-right');
+                }
+
+                btn.onclick = () => selectAnswer(idx);
+                btn.innerHTML = `<span>${opt}</span><span class="w-5 h-5 rounded-full border border-slate-600 inline-block"></span>`;
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedIndex) {
+            const q = activeQuestions[currentQuestionIndex];
+            const t = translations[selectedQLang];
+            const optionsBtns = document.getElementById('options-container').children;
+            const feedback = document.getElementById('feedback');
+            const expBox = document.getElementById('explanation-box');
+            const expText = document.getElementById('explanation-text');
+            const wikiGoogleContainer = document.getElementById('wiki-google-btn-container');
+            const wikiGoogleLink = document.getElementById('wiki-google-link');
+
+            for (let btn of optionsBtns) {
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-slate-700');
+            }
+
+            if (selectedIndex === q.correctIndex) {
+                score++;
+                optionsBtns[selectedIndex].classList.add('bg-green-900', 'border-green-500', 'text-green-200');
+                feedback.className = "p-4 rounded-2xl mb-6 text-center font-bold bg-green-900 text-green-300 border border-green-500";
+                feedback.innerText = t.correctMsg;
+                wikiGoogleContainer.classList.add('hidden');
+            } else {
+                optionsBtns[selectedIndex].classList.add('bg-red-900', 'border-red-500', 'text-red-200');
+                optionsBtns[q.correctIndex].classList.add('bg-green-900', 'border-green-500', 'text-green-200');
+                feedback.className = "p-4 rounded-2xl mb-6 text-center font-bold bg-red-900 text-red-300 border border-red-500";
+                feedback.innerText = `${t.wrongMsg} ${q.options[q.correctIndex]}`;
+
+                const siteLang = selectedExpLang === 'all' ? '' : selectedExpLang + '.';
+                const googleWikiUrl = `https://www.google.com/search?q=${encodeURIComponent('site:' + siteLang + 'wikipedia.org ' + q.wikiQuery)}`;
+                wikiGoogleLink.href = googleWikiUrl;
+                wikiGoogleContainer.classList.remove('hidden');
+            }
+
+            expText.innerText = q.explanation;
+            expBox.classList.remove('hidden');
+
+            document.getElementById('score-tracker').innerText = `${t.scoreTracker}: ${score}`;
+            feedback.classList.remove('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < activeQuestions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-card').classList.add('hidden');
+            document.getElementById('result-card').classList.remove('hidden');
+
+            const percentage = Math.round((score / activeQuestions.length) * 100);
+            document.getElementById('final-score').innerText = `${score} / ${activeQuestions.length}`;
+            document.getElementById('result-percentage').innerText = `${percentage}%`;
+
+            const emoji = document.getElementById('result-emoji');
+            if (percentage >= 80) emoji.innerText = "🏆";
+            else if (percentage >= 50) emoji.innerText = "👏";
+            else emoji.innerText = "📚";
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+        function goHome() {
+            document.getElementById('result-card').classList.add('hidden');
+            document.getElementById('quiz-card').classList.add('hidden');
+            document.getElementById('welcome-card').classList.remove('hidden');
+        }
+
+        function showPoemModal() {
+            const container = document.getElementById('poem-content');
+            container.innerHTML = '';
+            poemLines.forEach((line, index) => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'poem-line';
+                lineDiv.innerHTML = `
+                    <span class="text-xs text-slate-500 pl-2 font-mono">${index + 1}</span>
+                    <span class="poem-part font-semibold text-amber-300">${line[0]}</span>
+                    <span class="poem-part text-slate-300">${line[1]}</span>
+                `;
+                container.appendChild(lineDiv);
+            });
+            document.getElementById('poem-modal').classList.remove('hidden');
+        }
+
+        function closePoemModal() {
+            document.getElementById('poem-modal').classList.add('hidden');
+        }
+
+        // Initial setup
+        updateUI();
+    </script>
+</body>
+</html>
