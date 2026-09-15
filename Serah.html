@@ -3,85 +3,478 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پڕۆگرامی فێرکاری الأرجوزة المئية - ئەکادیمی</title>
+    <title>پڕۆگرامی فێرکاری الأرجوزة المئية</title>
     
-    <!-- Robust Compiled Tailwind CSS (Fixes Github Pages rendering bugs) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" integrity="sha512-wnea99cKBU3EIRV383GHvhVR3jhkslT6PzcT21EGv954fcJY33LgQqcdkJy3F9yoR1eVNycA6npfLf48zLpLXCg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <!-- Modern Arabic & Kurdish Fonts -->
+    <!-- Modern Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Vazirmatn', sans-serif;
             background-color: #0f172a;
             color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
+
         .font-poem {
             font-family: 'Amiri', serif;
         }
+
+        /* Header */
+        header {
+            background-color: #1e293b;
+            border-bottom: 1px solid #334155;
+            padding: 1.25rem;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-container {
+            max-width: 48rem;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #f59e0b;
+        }
+
+        .header-sub {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 48rem;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Cards */
+        .card {
+            background-color: #1e293b;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Welcome Section */
+        .icon-box {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 1rem;
+            background-color: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .welcome-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .welcome-desc {
+            color: #cbd5e1;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Form Controls */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .full-width-option {
+                grid-column: span 2;
+            }
+        }
+
+        .option-box {
+            background-color: #0f172a;
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 1px solid #334155;
+        }
+
+        .option-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+
+        select {
+            width: 100%;
+            background-color: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #334155;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            outline: none;
+            font-family: inherit;
+        }
+
+        select:focus {
+            border-color: #f59e0b;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .button-group {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .btn {
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: #f59e0b;
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            background-color: #d97706;
+        }
+
+        .btn-secondary {
+            background-color: #334155;
+            color: #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+
+        /* Quiz Controls */
+        .quiz-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge {
+            background-color: #0f172a;
+            padding: 0.35rem 0.85rem;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+        }
+
+        .badge-score {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 0.6rem;
+            background-color: #0f172a;
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid #334155;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #f59e0b;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            color: #f8fafc;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: right;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: inherit;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #334155;
+        }
+
+        .option-btn.correct {
+            background-color: #064e3b !important;
+            border-color: #10b981 !important;
+            color: #a7f3d0 !important;
+        }
+
+        .option-btn.wrong {
+            background-color: #881337 !important;
+            border-color: #f43f5e !important;
+            color: #fecdd3 !important;
+        }
+
+        .feedback-box {
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .feedback-correct {
+            background-color: #064e3b;
+            color: #a7f3d0;
+            border: 1px solid #10b981;
+        }
+
+        .feedback-wrong {
+            background-color: #881337;
+            color: #fecdd3;
+            border: 1px solid #f43f5e;
+        }
+
+        .explanation-card {
+            background-color: #0f172a;
+            border-right: 4px solid #f59e0b;
+            padding: 1.25rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #334155;
+            border-left: 1px solid #334155;
+            border-bottom: 1px solid #334155;
+        }
+
+        .explanation-title {
+            color: #f59e0b;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .explanation-text {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .google-btn-box {
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #1e293b;
+        }
+
+        .google-link {
+            display: inline-block;
+            background-color: #2563eb;
+            color: #ffffff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Result Section */
+        .result-box {
+            text-align: center;
+        }
+
+        .result-score-card {
+            background-color: #0f172a;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid #334155;
+            max-width: 20rem;
+            margin: 0 auto 2rem auto;
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #f59e0b;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(2, 6, 23, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 50;
+        }
+
+        .modal-content {
+            background-color: #0f172a;
+            border-radius: 1.5rem;
+            max-width: 40rem;
+            width: 100%;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #334155;
+        }
+
+        .modal-header {
+            padding: 1.25rem;
+            background-color: #020617;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
         .poem-line {
             display: flex;
             justify-content: space-between;
             gap: 1.5rem;
-            padding: 0.8rem 0;
+            padding: 0.75rem 0;
             border-bottom: 1px dashed #334155;
         }
+
         .poem-part {
             flex: 1;
             text-align: center;
         }
-        /* Custom modal scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
+
+        .modal-footer {
+            padding: 1rem;
+            background-color: #020617;
+            border-top: 1px solid #1e293b;
+            border-bottom-left-radius: 1.5rem;
+            border-bottom-right-radius: 1.5rem;
         }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
+
+        footer {
+            background-color: #020617;
+            color: #64748b;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.75rem;
+            border-top: 1px solid #0f172a;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
+<body>
 
     <!-- Header -->
-    <header class="bg-slate-900 border-b border-slate-800 text-white p-5 sticky top-0 z-40 shadow-xl">
-        <div class="container mx-auto max-w-3xl flex justify-between items-center">
+    <header>
+        <div class="header-container">
             <div>
-                <h1 id="ui-header-title" class="text-xl md:text-2xl font-extrabold tracking-wide text-amber-400">📜 تاقیکردنەوەی الأرجوزة المئية</h1>
-                <p id="ui-header-sub" class="text-slate-400 text-xs md:text-sm mt-0.5">پرسیارەکان + ڕوونکردنەوەی فێرکاری لە ویکیپیدیاوە</p>
+                <h1 id="ui-header-title" class="header-title">📜 تاقیکردنەوەی الأرجوزة المئية</h1>
+                <p id="ui-header-sub" class="header-sub">پرسیارەکان + ڕوونکردنەوەی فێرکاری لە ویکیپیدیاوە</p>
             </div>
-            <span class="text-2xl opacity-75 hidden sm:block">🏛️</span>
+            <span style="font-size: 1.5rem;">🏛️</span>
         </div>
     </header>
 
     <!-- Main Content Area -->
-    <main class="container mx-auto max-w-3xl p-4 my-auto space-y-6">
+    <main>
         
         <!-- Welcome Screen -->
-        <div id="welcome-card" class="bg-slate-800 rounded-3xl shadow-2xl p-6 md:p-8 border border-slate-700">
-            <div class="flex justify-center mb-6">
-                <div class="w-16 h-16 rounded-2xl bg-amber-500 bg-opacity-10 border border-amber-500 border-opacity-30 flex items-center justify-center text-amber-400 text-3xl">
-                    📜
-                </div>
-            </div>
+        <div id="welcome-card" class="card">
+            <div class="icon-box">📜</div>
 
-            <h2 id="ui-welcome-title" class="text-2xl md:text-3xl font-bold mb-3 text-center text-white">بەخێربێیت بۆ بەرنامەی الأرجوزة المئية</h2>
-            <p id="ui-welcome-desc" class="text-slate-300 text-center mb-8 leading-relaxed text-sm md:text-base font-normal max-w-xl mx-auto">
+            <h2 id="ui-welcome-title" class="welcome-title">بەخێربێیت بۆ بەرنامەی الأرجوزة المئية</h2>
+            <p id="ui-welcome-desc" class="welcome-desc">
                 زمان، ژمارەی پرسیارەکان دیاری بکە بۆ دەستپێکردنی کویزەکە.
             </p>
 
             <!-- Options Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8 text-right">
+            <div class="options-grid">
                 
                 <!-- Question Language Selector -->
-                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700">
-                    <label id="ui-lbl-q-lang" class="block font-semibold text-slate-300 mb-2 text-xs md:text-sm">🌐 زمانی پرسیارەکان:</label>
-                    <select id="q-lang-select" class="w-full border border-slate-700 rounded-xl p-3 font-semibold text-white bg-slate-800 focus:outline-none focus:border-amber-500 text-sm transition">
+                <div class="option-box">
+                    <label id="ui-lbl-q-lang" class="option-label">🌐 زمانی پرسیارەکان:</label>
+                    <select id="q-lang-select">
                         <option value="ckb" selected>کوردی (Kurdish)</option>
                         <option value="ar">العربية (Arabic)</option>
                         <option value="en">English (ئینگلیزی)</option>
@@ -91,9 +484,9 @@
                 </div>
 
                 <!-- Explanation Language Selector -->
-                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700">
-                    <label id="ui-lbl-exp-lang" class="block font-semibold text-slate-300 mb-2 text-xs md:text-sm">💡 زمانی ڕوونکردنەوە (ویکیپیدیا):</label>
-                    <select id="exp-lang-select" class="w-full border border-slate-700 rounded-xl p-3 font-semibold text-white bg-slate-800 focus:outline-none focus:border-amber-500 text-sm transition">
+                <div class="option-box">
+                    <label id="ui-lbl-exp-lang" class="option-label">💡 زمانی ڕوونکردنەوە (ویکیپیدیا):</label>
+                    <select id="exp-lang-select">
                         <option value="ckb" selected>کوردی (Kurdish)</option>
                         <option value="ar">العربية (Arabic)</option>
                         <option value="en">English (ئینگلیزی)</option>
@@ -103,9 +496,9 @@
                 </div>
 
                 <!-- Question Count Selector -->
-                <div class="bg-slate-900 p-4 rounded-2xl border border-slate-700 md:col-span-2">
-                    <label id="ui-lbl-count" class="block font-semibold text-slate-300 mb-2 text-xs md:text-sm">🔢 ژمارەی پرسیارەکان:</label>
-                    <select id="question-count-select" class="w-full border border-slate-700 rounded-xl p-3 text-center font-bold text-amber-400 bg-slate-800 focus:outline-none focus:border-amber-500 text-sm transition">
+                <div class="option-box full-width-option">
+                    <label id="ui-lbl-count" class="option-label">🔢 ژمارەی پرسیارەکان:</label>
+                    <select id="question-count-select" style="text-align: center; font-weight: bold; color: #f59e0b;">
                         <option value="10">١٠ پرسیار</option>
                         <option value="20">٢٠ پرسیار</option>
                         <option value="30">٣٠ پرسیار</option>
@@ -116,75 +509,72 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button id="ui-btn-start" onclick="startQuiz()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-4 px-6 rounded-2xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-base cursor-pointer">
+            <div class="button-group">
+                <button id="ui-btn-start" onclick="startQuiz()" class="btn btn-primary">
                     🎯 دەستپێکردنی کویز
                 </button>
-                <button id="ui-btn-poem" onclick="showPoemModal()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-4 px-6 rounded-2xl shadow transition duration-200 flex items-center justify-center gap-2 text-base cursor-pointer">
+                <button id="ui-btn-poem" onclick="showPoemModal()" class="btn btn-secondary">
                     📜 خوێندنەوەی الأرجوزة
                 </button>
             </div>
         </div>
 
         <!-- Quiz Screen -->
-        <div id="quiz-card" class="hidden bg-slate-800 rounded-3xl shadow-2xl p-6 md:p-8 border border-slate-700">
+        <div id="quiz-card" class="card hidden">
             <!-- Progress Bar -->
-            <div class="flex justify-between items-center mb-4 text-xs md:text-sm font-semibold text-slate-400">
-                <span id="question-tracker" class="bg-slate-900 px-3.5 py-1.5 rounded-xl border border-slate-700 text-slate-300">پرسیاری ١</span>
-                <span id="score-tracker" class="bg-amber-500 bg-opacity-10 border border-amber-500 border-opacity-30 text-amber-400 px-3.5 py-1.5 rounded-xl">نمرە: ٠</span>
+            <div class="quiz-status">
+                <span id="question-tracker" class="badge">پرسیاری ١</span>
+                <span id="score-tracker" class="badge badge-score">نمرە: ٠</span>
             </div>
-            <div class="w-full bg-slate-900 h-2.5 rounded-full mb-8 overflow-hidden border border-slate-700">
-                <div id="progress-bar" class="bg-amber-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
             </div>
 
             <!-- Question -->
-            <h3 id="question-text" class="text-xl md:text-2xl font-bold mb-8 text-white leading-relaxed">
+            <h3 id="question-text" class="question-title">
                 پرسیار لێرە دەردەکەوێت...
             </h3>
 
             <!-- Options Container -->
-            <div id="options-container" class="space-y-3.5 mb-8"></div>
+            <div id="options-container" class="options-list"></div>
 
             <!-- Feedback Message -->
-            <div id="feedback" class="hidden p-4 rounded-2xl mb-6 text-center font-bold text-sm md:text-base"></div>
+            <div id="feedback" class="feedback-box hidden"></div>
 
             <!-- Wiki Explanation Box -->
-            <div id="explanation-box" class="hidden bg-slate-900 border-r-4 border-amber-500 p-5 rounded-2xl mb-8 space-y-3 border border-slate-700">
-                <div class="font-bold text-amber-400 flex items-center gap-2 text-sm md:text-base">
-                    <span id="ui-exp-title">💡 ڕوونکردنەوەی زیاتر (لە ویکیپیدیاوە):</span>
-                </div>
-                <p id="explanation-text" class="text-slate-300 text-sm md:text-base leading-relaxed"></p>
+            <div id="explanation-box" class="explanation-card hidden">
+                <div id="ui-exp-title" class="explanation-title">💡 ڕوونکردنەوەی زیاتر (لە ویکیپیدیاوە):</div>
+                <p id="explanation-text" class="explanation-text"></p>
                 
-                <!-- Google Wiki Direct Search Button -->
-                <div id="wiki-google-btn-container" class="hidden pt-3 border-t border-slate-800 mt-3">
-                    <a id="wiki-google-link" href="#" target="_blank" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-5 rounded-xl text-xs md:text-sm shadow-md transition duration-200">
+                <div id="wiki-google-btn-container" class="google-btn-box hidden">
+                    <a id="wiki-google-link" href="#" target="_blank" class="google-link">
                         🔍 لە گووگڵ بەسەر ویکیپیدیادا باسی بکە
                     </a>
                 </div>
             </div>
 
             <!-- Next Button -->
-            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-4 rounded-2xl shadow-xl transition duration-200 text-base cursor-pointer">
+            <button id="next-btn" onclick="nextQuestion()" class="btn btn-primary hidden" style="width: 100%;">
                 پرسیاری دواتر ⬅️
             </button>
         </div>
 
         <!-- Result Screen -->
-        <div id="result-card" class="hidden bg-slate-800 rounded-3xl shadow-2xl p-8 text-center border border-slate-700">
-            <div class="text-6xl mb-4" id="result-emoji">🎉</div>
-            <h2 id="ui-result-title" class="text-2xl md:text-3xl font-extrabold text-white mb-2">تاقیکردنەوەکەت تەواو کرد!</h2>
-            <p id="ui-result-desc" class="text-slate-400 mb-8 text-sm md:text-base">ئەمەش ئەنجامی کۆتایی زانیارییەکانتە:</p>
+        <div id="result-card" class="card result-box hidden">
+            <div style="font-size: 4rem; margin-bottom: 1rem;" id="result-emoji">🎉</div>
+            <h2 id="ui-result-title" class="welcome-title">تاقیکردنەوەکەت تەواو کرد!</h2>
+            <p id="ui-result-desc" class="welcome-desc">ئەمەش ئەنجامی کۆتایی زانیارییەکانتە:</p>
             
-            <div class="bg-slate-900 rounded-2xl p-6 mb-8 border border-slate-700 max-w-sm mx-auto">
-                <p class="text-5xl font-black text-amber-400 mb-2" id="final-score">٠ / ٠</p>
-                <p class="text-sm font-semibold text-slate-400" id="result-percentage">٠% وەڵامی ڕاست</p>
+            <div class="result-score-card">
+                <p class="result-score" id="final-score">٠ / ٠</p>
+                <p style="color: #94a3b8; font-weight: 600;" id="result-percentage">٠% وەڵامی ڕاست</p>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button id="ui-btn-restart" onclick="restartQuiz()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 px-8 rounded-2xl shadow transition duration-200 cursor-pointer">
+            <div class="button-group" style="max-width: 25rem; margin: 0 auto;">
+                <button id="ui-btn-restart" onclick="restartQuiz()" class="btn btn-primary">
                     🔄 دووبارەکردنەوە
                 </button>
-                <button id="ui-btn-home" onclick="goHome()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3.5 px-8 rounded-2xl shadow transition duration-200 cursor-pointer">
+                <button id="ui-btn-home" onclick="goHome()" class="btn btn-secondary">
                     🏠 پەڕەی سەرەکی
                 </button>
             </div>
@@ -193,31 +583,29 @@
     </main>
 
     <!-- Modal for Showing Full Poem -->
-    <div id="poem-modal" class="hidden fixed inset-0 bg-slate-950 bg-opacity-80 flex items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 rounded-3xl max-w-2xl w-full h-5/6 flex flex-col shadow-2xl border border-slate-700">
-            <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950 rounded-t-3xl">
+    <div id="poem-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
                 <div>
-                    <h3 class="text-lg font-bold text-amber-400 font-poem">الأرجوزة المئية في ذكر حال أشرف البرية</h3>
-                    <p class="text-xs text-slate-400 mt-1">نظم: القاضي علي بن علي بن أبي العز الحنفي</p>
+                    <h3 class="font-poem" style="color: #f59e0b; font-weight: bold; font-size: 1.1rem;">الأرجوزة المئية في ذكر حال أشرف البرية</h3>
+                    <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.2rem;">نظم: القاضي علي بن علي بن أبي العز الحنفي</p>
                 </div>
-                <button onclick="closePoemModal()" class="text-slate-400 hover:text-white font-bold text-2xl px-2 transition cursor-pointer">&times;</button>
+                <button onclick="closePoemModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
             </div>
 
-            <!-- External Links inside Poem Box -->
-            <div class="bg-slate-950 p-3 border-b border-slate-800 flex flex-wrap gap-2 justify-center text-xs">
-                <a href="https://archive.org/details/100_20200831" target="_blank" class="bg-amber-500 bg-opacity-10 hover:bg-opacity-20 text-amber-400 border border-amber-500 border-opacity-30 font-semibold px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+            <div style="background-color: #020617; padding: 0.75rem; border-bottom: 1px solid #1e293b; display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                <a href="https://archive.org/details/100_20200831" target="_blank" style="background-color: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); padding: 0.4rem 0.8rem; border-radius: 0.5rem; text-decoration: none; font-size: 0.75rem; font-weight: 600;">
                     📥 داگرتنی فایلی PDF
                 </a>
-                <a href="https://ar.islamway.net/collection/15119" target="_blank" class="bg-green-500 bg-opacity-10 hover:bg-opacity-20 text-green-400 border border-green-500 border-opacity-30 font-semibold px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                <a href="https://ar.islamway.net/collection/15119" target="_blank" style="background-color: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.3); padding: 0.4rem 0.8rem; border-radius: 0.5rem; text-decoration: none; font-size: 0.75rem; font-weight: 600;">
                     🎧 گوێگرتن لە دەنگ (MP3)
                 </a>
             </div>
 
-            <div class="p-6 overflow-y-auto flex-1 text-center text-slate-200 text-base md:text-lg leading-relaxed space-y-2 font-poem" id="poem-content">
-            </div>
+            <div id="poem-content" class="modal-body font-poem"></div>
 
-            <div class="p-4 border-t border-slate-800 text-left bg-slate-950 rounded-b-3xl">
-                <button id="ui-btn-close-modal" onclick="closePoemModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-6 rounded-xl text-sm border border-slate-700 cursor-pointer">
+            <div class="modal-footer">
+                <button id="ui-btn-close-modal" onclick="closePoemModal()" class="btn btn-secondary" style="padding: 0.5rem 1.5rem; font-size: 0.85rem;">
                     داخستن
                 </button>
             </div>
@@ -225,7 +613,7 @@
     </div>
 
     <!-- Footer -->
-    <footer id="ui-footer" class="bg-slate-950 text-slate-500 text-center py-4 text-xs border-t border-slate-900">
+    <footer id="ui-footer">
         درووستکراوە بۆ بڵاوکردنەوەی هۆنراوەی الأرجوزة المئية
     </footer>
 
@@ -549,16 +937,16 @@
 
             q.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full border border-slate-700 rounded-2xl p-4 md:p-5 font-semibold transition duration-200 flex items-center justify-between bg-slate-900 hover:bg-slate-700 text-slate-200 text-sm md:text-base cursor-pointer";
+                btn.className = "option-btn";
                 
                 if(selectedQLang === 'en' || selectedQLang === 'tr') {
-                    btn.classList.add('text-left');
+                    btn.style.textAlign = 'left';
                 } else {
-                    btn.classList.add('text-right');
+                    btn.style.textAlign = 'right';
                 }
 
                 btn.onclick = () => selectAnswer(idx);
-                btn.innerHTML = `<span>${opt}</span><span class="w-5 h-5 rounded-full border border-slate-600 inline-block"></span>`;
+                btn.innerHTML = `<span>${opt}</span><span style="width:1rem; height:1rem; border-radius:50%; border:1px solid #64748b; display:inline-block;"></span>`;
                 optionsContainer.appendChild(btn);
             });
         }
@@ -575,19 +963,18 @@
 
             for (let btn of optionsBtns) {
                 btn.disabled = true;
-                btn.classList.remove('hover:bg-slate-700');
             }
 
             if (selectedIndex === q.correctIndex) {
                 score++;
-                optionsBtns[selectedIndex].classList.add('bg-green-900', 'border-green-500', 'text-green-200');
-                feedback.className = "p-4 rounded-2xl mb-6 text-center font-bold bg-green-900 text-green-300 border border-green-500";
+                optionsBtns[selectedIndex].classList.add('correct');
+                feedback.className = "feedback-box feedback-correct";
                 feedback.innerText = t.correctMsg;
                 wikiGoogleContainer.classList.add('hidden');
             } else {
-                optionsBtns[selectedIndex].classList.add('bg-red-900', 'border-red-500', 'text-red-200');
-                optionsBtns[q.correctIndex].classList.add('bg-green-900', 'border-green-500', 'text-green-200');
-                feedback.className = "p-4 rounded-2xl mb-6 text-center font-bold bg-red-900 text-red-300 border border-red-500";
+                optionsBtns[selectedIndex].classList.add('wrong');
+                optionsBtns[q.correctIndex].classList.add('correct');
+                feedback.className = "feedback-box feedback-wrong";
                 feedback.innerText = `${t.wrongMsg} ${q.options[q.correctIndex]}`;
 
                 const siteLang = selectedExpLang === 'all' ? '' : selectedExpLang + '.';
@@ -644,9 +1031,9 @@
                 const lineDiv = document.createElement('div');
                 lineDiv.className = 'poem-line';
                 lineDiv.innerHTML = `
-                    <span class="text-xs text-slate-500 pl-2 font-mono">${index + 1}</span>
-                    <span class="poem-part font-semibold text-amber-300">${line[0]}</span>
-                    <span class="poem-part text-slate-300">${line[1]}</span>
+                    <span style="font-size:0.75rem; color:#64748b;">${index + 1}</span>
+                    <span class="poem-part" style="color:#f59e0b; font-weight:bold;">${line[0]}</span>
+                    <span class="poem-part" style="color:#cbd5e1;">${line[1]}</span>
                 `;
                 container.appendChild(lineDiv);
             });
