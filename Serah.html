@@ -1,445 +1,134 @@
 <!DOCTYPE html>
-<html lang="ckb" dir="rtl" id="html-tag">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پڕۆگرامی فێرکاری الأرجوزة المئية</title>
-    
-    <!-- Modern Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <title>Seerah Academy | Interactive Learning Platform</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-card: #e9e8e8;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --primary-emerald: #065f46;
+            --primary-light: #d1fae5;
+            --primary-hover: #047857;
+            --gold-accent: #d97706;
+            --gold-light: #fef3c7;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --radius: 12px;
         }
 
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary-emerald: #10b981;
+            --primary-light: #064e3b;
+            --primary-hover: #34d399;
+            --gold-accent: #fbbf24;
+            --gold-light: #78350f;
+            --border-color: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
 
-        .font-poem {
-            font-family: 'Amiri', serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-primary); color: var(--text-main); transition: background-color 0.3s, color 0.3s; line-height: 1.6; }
+        .arabic { font-family: 'Amiri', serif; font-size: 1.25rem; direction: rtl; }
 
-        /* Header */
-        header {
-            background-color: #1e293b;
-            border-bottom: 1px solid #334155;
-            padding: 1.25rem;
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-        }
+        /* Header Navigation */
+        header { background-color: var(--bg-card); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
+        .logo { font-size: 1.4rem; font-weight: 700; color: var(--primary-emerald); display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+        .controls { display: flex; align-items: center; gap: 0.8rem; }
+        .search-box { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 20px; background: var(--bg-primary); color: var(--text-main); font-size: 0.9rem; }
+        .theme-btn, .settings-btn { background: none; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; color: var(--text-main); font-size: 0.85rem; font-weight: 500; }
 
-        .header-container {
-            max-width: 48rem;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        /* Main Tabs */
+        .tabs-nav { display: flex; overflow-x: auto; max-width: 1200px; margin: 0 auto; padding: 0.5rem 1.5rem; gap: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .tab-btn { padding: 0.6rem 1.2rem; border: none; background: none; color: var(--text-muted); cursor: pointer; font-weight: 500; border-radius: 8px; white-space: nowrap; transition: 0.2s; }
+        .tab-btn.active { background: var(--primary-emerald); color: #ffffff; }
 
-        .header-title {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: #f59e0b;
-        }
+        /* Container Layout */
+        main { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; min-height: 80vh; }
+        .page { display: none; }
+        .page.active { display: block; }
 
-        .header-sub {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            margin-top: 0.25rem;
-        }
+        /* Cards & Components */
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); }
+        .btn { padding: 0.6rem 1.2rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; transition: 0.2s; text-decoration: none; }
+        .btn-primary { background: var(--primary-emerald); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: var(--border-color); color: var(--text-main); }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-wiki { background: #3366cc; color: white; font-size: 0.85rem; padding: 0.4rem 0.8rem; margin-top: 0.5rem; }
+        .btn-wiki:hover { background: #254db3; }
+        
+        /* Progress Bar */
+        .progress-bar-bg { width: 100%; height: 10px; background: var(--border-color); border-radius: 5px; overflow: hidden; margin: 0.5rem 0; }
+        .progress-bar-fill { height: 100%; background: var(--primary-emerald); width: 0%; transition: width 0.4s ease; }
 
-        /* Main Container */
-        main {
-            max-width: 48rem;
-            width: 100%;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+        /* Grid */
+        .level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .level-card { border-left: 5px solid var(--primary-emerald); }
+        .badge { padding: 0.25rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-authentic { background: #dcfce7; color: #166534; }
 
-        /* Cards */
-        .card {
-            background-color: #1e293b;
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            border: 1px solid #334155;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
+        /* Teacher Mode Toggle */
+        .mode-toggle { display: flex; background: var(--border-color); padding: 0.25rem; border-radius: 8px; width: fit-content; margin-bottom: 1.5rem; }
+        .mode-btn { padding: 0.4rem 1rem; border: none; background: none; border-radius: 6px; cursor: pointer; font-weight: 600; color: var(--text-muted); }
+        .mode-btn.active { background: var(--bg-card); color: var(--text-main); box-shadow: var(--shadow); }
 
-        .hidden {
-            display: none !important;
-        }
+        /* Ultra-Deep Timeline Layout */
+        .timeline { position: relative; padding-left: 2rem; border-left: 3px solid var(--primary-emerald); margin-top: 1.5rem; }
+        .timeline-item { position: relative; margin-bottom: 2rem; background: var(--bg-card); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+        .timeline-item::before { content: ''; position: absolute; left: -2.65rem; top: 1.5rem; width: 1.2rem; height: 1.2rem; border-radius: 50%; background: var(--primary-emerald); border: 3px solid var(--bg-primary); }
+        .timeline-badge { background: var(--gold-light); color: var(--gold-accent); padding: 0.3rem 0.7rem; border-radius: 6px; font-weight: bold; font-size: 0.85rem; display: inline-block; margin-bottom: 0.6rem; }
+        .timeline-section-title { color: var(--primary-emerald); border-bottom: 2px solid var(--primary-light); padding-bottom: 0.4rem; margin-bottom: 0.8rem; font-size: 1.2rem; }
+        .timeline-detail-box { background: var(--bg-primary); padding: 1rem; border-radius: 8px; margin-top: 0.8rem; border-right: 4px solid var(--gold-accent); direction: rtl; text-align: right; }
+        .timeline-detail-box ul { padding-right: 1.2rem; margin-top: 0.5rem; }
 
-        /* Welcome Section */
-        .icon-box {
-            width: 4rem;
-            height: 4rem;
-            border-radius: 1rem;
-            background-color: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 1.5rem auto;
-        }
+        /* Quizzes */
+        .quiz-option { display: block; width: 100%; padding: 0.8rem; margin: 0.5rem 0; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); color: var(--text-main); text-align: left; cursor: pointer; transition: 0.2s; }
+        .quiz-option:hover { background: var(--primary-light); }
+        
+        /* Wikipedia Box */
+        .wiki-box { margin-top: 0.8rem; padding: 1rem; border-radius: 8px; background: #f0f4f8; border-left: 4px solid #3366cc; color: #1f2937; }
+        [data-theme="dark"] .wiki-box { background: #1e293b; border-left: 4px solid #3b82f6; color: #f3f4f6; }
 
-        .welcome-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 0.75rem;
-        }
+        /* Select & Input Controls */
+        .select-control, .input-control { padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-weight: 500; }
 
-        .welcome-desc {
-            color: #cbd5e1;
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-        }
+        /* User Banner & Results Table */
+        .quiz-user-banner { background: var(--primary-light); border: 1px solid var(--primary-emerald); color: var(--primary-emerald); padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Custom Table Style for Teacher Results */
+        .results-table { width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left; }
+        .results-table th, .results-table td { border: 1px solid var(--border-color); padding: 0.8rem; }
+        .results-table th { background: var(--primary-light); color: var(--primary-emerald); }
 
-        /* Form Controls */
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
+        /* Shortcut hint pill */
+        .shortcut-hint { font-size: 0.7rem; background: var(--border-color); color: var(--text-muted); padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.3rem; }
 
-        @media (min-width: 640px) {
-            .options-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .full-width-option {
-                grid-column: span 2;
-            }
-        }
+        /* Modal Overlay */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 200; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border-color); width: 90%; max-width: 550px; padding: 1.5rem; box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+        .close-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
+        
+        kbd { background: var(--bg-primary); border: 1px solid var(--border-color); border-bottom-width: 2px; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 600; font-family: monospace; color: var(--primary-emerald); }
 
-        .option-box {
-            background-color: #0f172a;
-            padding: 1rem;
-            border-radius: 1rem;
-            border: 1px solid #334155;
-        }
-
-        .option-label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #cbd5e1;
-            margin-bottom: 0.5rem;
-        }
-
-        select {
-            width: 100%;
-            background-color: #1e293b;
-            color: #f8fafc;
-            border: 1px solid #334155;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            outline: none;
-            font-family: inherit;
-        }
-
-        select:focus {
-            border-color: #f59e0b;
-        }
-
-        /* Buttons */
-        .button-group {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        @media (min-width: 640px) {
-            .button-group {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .btn {
-            padding: 1rem 1.5rem;
-            border-radius: 1rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .btn-primary {
-            background-color: #f59e0b;
-            color: #0f172a;
-        }
-
-        .btn-primary:hover {
-            background-color: #d97706;
-        }
-
-        .btn-secondary {
-            background-color: #334155;
-            color: #ffffff;
-        }
-
-        .btn-secondary:hover {
-            background-color: #475569;
-        }
-
-        /* Quiz Controls */
-        .quiz-status {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .badge {
-            background-color: #0f172a;
-            padding: 0.35rem 0.85rem;
-            border-radius: 0.75rem;
-            border: 1px solid #334155;
-        }
-
-        .badge-score {
-            background-color: rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.3);
-            color: #f59e0b;
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            height: 0.6rem;
-            background-color: #0f172a;
-            border-radius: 1rem;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-            border: 1px solid #334155;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background-color: #f59e0b;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .question-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.85rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .option-btn {
-            width: 100%;
-            padding: 1rem;
-            background-color: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 1rem;
-            color: #f8fafc;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-align: right;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: inherit;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            background-color: #334155;
-        }
-
-        .option-btn.correct {
-            background-color: #064e3b !important;
-            border-color: #10b981 !important;
-            color: #a7f3d0 !important;
-        }
-
-        .option-btn.wrong {
-            background-color: #881337 !important;
-            border-color: #f43f5e !important;
-            color: #fecdd3 !important;
-        }
-
-        .feedback-box {
-            padding: 1rem;
-            border-radius: 1rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .feedback-correct {
-            background-color: #064e3b;
-            color: #a7f3d0;
-            border: 1px solid #10b981;
-        }
-
-        .feedback-wrong {
-            background-color: #881337;
-            color: #fecdd3;
-            border: 1px solid #f43f5e;
-        }
-
-        .explanation-card {
-            background-color: #0f172a;
-            border-right: 4px solid #f59e0b;
-            padding: 1.25rem;
-            border-radius: 1rem;
-            margin-bottom: 1.5rem;
-            border-top: 1px solid #334155;
-            border-left: 1px solid #334155;
-            border-bottom: 1px solid #334155;
-        }
-
-        .explanation-title {
-            color: #f59e0b;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .explanation-text {
-            color: #cbd5e1;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .google-btn-box {
-            margin-top: 1rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid #1e293b;
-        }
-
-        .google-link {
-            display: inline-block;
-            background-color: #2563eb;
-            color: #ffffff;
-            padding: 0.6rem 1.2rem;
-            border-radius: 0.75rem;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        /* Result Section */
-        .result-box {
-            text-align: center;
-        }
-
-        .result-score-card {
-            background-color: #0f172a;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            border: 1px solid #334155;
-            max-width: 20rem;
-            margin: 0 auto 2rem auto;
-        }
-
-        .result-score {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #f59e0b;
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(2, 6, 23, 0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            z-index: 50;
-        }
-
-        .modal-content {
-            background-color: #0f172a;
-            border-radius: 1.5rem;
-            max-width: 40rem;
-            width: 100%;
-            height: 85vh;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #334155;
-        }
-
-        .modal-header {
-            padding: 1.25rem;
-            background-color: #020617;
-            border-bottom: 1px solid #1e293b;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top-left-radius: 1.5rem;
-            border-top-right-radius: 1.5rem;
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .poem-line {
-            display: flex;
-            justify-content: space-between;
-            gap: 1.5rem;
-            padding: 0.75rem 0;
-            border-bottom: 1px dashed #334155;
-        }
-
-        .poem-part {
-            flex: 1;
-            text-align: center;
-        }
-
-        .modal-footer {
-            padding: 1rem;
-            background-color: #020617;
-            border-top: 1px solid #1e293b;
-            border-bottom-left-radius: 1.5rem;
-            border-bottom-right-radius: 1.5rem;
-        }
-
-        footer {
-            background-color: #020617;
-            color: #64748b;
-            text-align: center;
-            padding: 1rem;
-            font-size: 0.75rem;
-            border-top: 1px solid #0f172a;
+        @media (max-width: 768px) {
+            .nav-container { flex-direction: column; gap: 1rem; }
+            .tabs-nav { padding: 0.5rem; }
+            .timeline { padding-left: 1.2rem; }
+            .timeline-item::before { left: -1.85rem; }
         }
     </style>
 </head>
@@ -447,605 +136,1110 @@
 
     <!-- Header -->
     <header>
-        <div class="header-container">
-            <div>
-                <h1 id="ui-header-title" class="header-title">📜 تاقیکردنەوەی الأرجوزة المئية</h1>
-                <p id="ui-header-sub" class="header-sub">پرسیارەکان + ڕوونکردنەوەی فێرکاری لە ویکیپیدیاوە</p>
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="switchTab('home')">
+                <span>🕌</span> Seerah Academy
+            </a>
+            <div class="controls">
+                <input type="text" id="searchInput" class="search-box" placeholder="Search lessons..." onkeyup="handleSearch()">
+                <button class="settings-btn" onclick="openShortcutGuide()">⌨️ Shortcuts Guide</button>
+                <button class="theme-btn" onclick="toggleTheme()">🌙 Theme</button>
             </div>
-            <span style="font-size: 1.5rem;">🏛️</span>
         </div>
+        <nav class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('home')">Home <span class="shortcut-hint">Ctrl+H</span></button>
+            <button class="tab-btn" onclick="switchTab('roadmap')">Learning Roadmap <span class="shortcut-hint">Ctrl+L</span></button>
+            <button class="tab-btn" onclick="switchTab('lesson')">Lessons <span class="shortcut-hint">Ctrl+E</span></button>
+            <button class="tab-btn" onclick="switchTab('arjuzah')">الأرجوزة السنية & Quiz <span class="shortcut-hint">Ctrl+Q</span></button>
+            <button class="tab-btn" onclick="switchTab('timeline')">Deep Timeline <span class="shortcut-hint">Ctrl+D</span></button>
+            <button class="tab-btn" onclick="switchTab('people')">Important People <span class="shortcut-hint">Ctrl+P</span></button>
+            <button class="tab-btn" onclick="switchTab('notes')">My Notes & Revision</button>
+        </nav>
     </header>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main>
-        
-        <!-- Welcome Screen -->
-        <div id="welcome-card" class="card">
-            <div class="icon-box">📜</div>
+        <!-- 1. HOME PAGE -->
+        <section id="home" class="page active">
+            <div class="card" style="background: linear-gradient(135deg, var(--primary-light), var(--bg-card));">
+                <h2>Welcome to Seerah Academy</h2>
+                <p style="margin-top: 0.5rem; color: var(--text-muted);">
+                    <strong>Seerah (سيرة)</strong> refers to the comprehensive study of the life, character, and teachings of Prophet Muhammad ﷺ.
+                </p>
+                <div style="margin-top: 1.5rem;">
+                    <button class="btn btn-primary" onclick="switchTab('roadmap')">Start Learning Journey →</button>
+                    <button class="btn btn-secondary" onclick="continueLearning()" style="margin-left: 0.5rem;">Continue Last Lesson</button>
+                </div>
+            </div>
 
-            <h2 id="ui-welcome-title" class="welcome-title">بەخێربێیت بۆ بەرنامەی الأرجوزة المئية</h2>
-            <p id="ui-welcome-desc" class="welcome-desc">
-                زمان، ژمارەی پرسیارەکان دیاری بکە بۆ دەستپێکردنی کویزەکە.
-            </p>
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Keyboard Shortcuts Guide ⌨️</h3>
+                    <button class="btn btn-secondary" onclick="openShortcutGuide()" style="font-size: 0.8rem; padding: 0.3rem 0.6rem;">How to Use →</button>
+                </div>
+                <p style="color: var(--text-muted); margin: 0.5rem 0 0.8rem 0; font-size: 0.9rem;">Navigate through pages quickly using key combinations:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.8rem; font-size: 0.9rem;">
+                    <div><kbd>Ctrl</kbd> + <kbd>H</kbd> : Home</div>
+                    <div><kbd>Ctrl</kbd> + <kbd>L</kbd> : Learning Roadmap</div>
+                    <div><kbd>Ctrl</kbd> + <kbd>E</kbd> : Lessons</div>
+                    <div><kbd>Ctrl</kbd> + <kbd>Q</kbd> : Quiz & Arjuzah</div>
+                    <div><kbd>Ctrl</kbd> + <kbd>D</kbd> : Deep Timeline</div>
+                    <div><kbd>Ctrl</kbd> + <kbd>P</kbd> : Important People</div>
+                </div>
+            </div>
 
-            <!-- Options Grid -->
-            <div class="options-grid">
+            <div class="card">
+                <h3>Overall Learning Progress</h3>
+                <div class="progress-bar-bg">
+                    <div id="overallProgressBar" class="progress-bar-fill"></div>
+                </div>
+                <p id="overallProgressText" style="font-size: 0.9rem; color: var(--text-muted);">0% Completed</p>
+            </div>
+
+            <div class="card" style="border-left: 4px solid var(--gold-accent);">
+                <span class="badge" style="background: var(--gold-light); color: var(--gold-accent);">Daily Seerah Reflection</span>
+                <h4 style="margin-top: 0.5rem;">The Character of the Prophet ﷺ</h4>
+                <p style="font-style: italic; margin: 0.5rem 0;" class="arabic">"وَإِنَّكَ لَعَلَىٰ خُلُقٍ عَظِيمٍ"</p>
+                <p style="font-size: 0.95rem;">"And indeed, you are of a great moral character." — (Qur'an 68:4)</p>
+            </div>
+        </section>
+
+        <!-- 2. LEARNING ROADMAP PAGE -->
+        <section id="roadmap" class="page">
+            <h2>Learning Roadmap</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Step-by-step learning path.</p>
+            <div class="level-grid" id="roadmapGrid"></div>
+        </section>
+
+        <!-- 3. LESSON VIEW PAGE -->
+        <section id="lesson" class="page">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+                <div class="mode-toggle">
+                    <button id="studentModeBtn" class="mode-btn active" onclick="setLessonMode('student')">Student View</button>
+                    <button id="teacherModeBtn" class="mode-btn" onclick="setLessonMode('teacher')">Teacher Mode 🎓</button>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" onclick="toggleBookmark()"><span id="bookmarkIcon">☆</span> Bookmark</button>
+                    <select id="statusSelect" onchange="updateLessonStatus(this.value)" class="select-control">
+                        <option value="Not Started">Status: Not Started</option>
+                        <option value="In Progress">Status: In Progress</option>
+                        <option value="Completed">Status: Completed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="lessonContentContainer" class="card"></div>
+
+            <div class="card">
+                <h3>Lesson Checkup Quiz</h3>
+                <div id="quizContainer" style="margin-top: 1rem;"></div>
+            </div>
+
+            <div class="card">
+                <h3>My Personal Notes for this Lesson</h3>
+                <textarea id="lessonNotesArea" placeholder="Write down your insights..." style="width: 100%; height: 100px; padding: 0.8rem; margin-top: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-primary); color: var(--text-main);"></textarea>
+                <button class="btn btn-primary" onclick="saveLessonNote()" style="margin-top: 0.5rem;">Save Notes</button>
+            </div>
+        </section>
+
+        <!-- 4. ARJUZAH SUNNIYYAH & MULTI-LINGUAL QUIZ PAGE -->
+        <section id="arjuzah" class="page">
+            <h2>الأرجوزة السنية في ذكر سيرة خير البرية ﷺ</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">نظم: الأمين موافقي (أبو عبيدة الجزائري) - بە دەنگی ظفر النتيفات</p>
+
+            <div class="card" style="background: linear-gradient(135deg, var(--gold-light), var(--bg-card));">
+                <h3>🎥 ڤیدیۆی الأرجوزة السنية / Video & Audio</h3>
+                <p style="margin: 0.5rem 0;">دەتوانیت گوێبیستی خوێندنەوەی «الأرجوزة السنية» ببیت لە یوتیوب بە دەنگی ظفر النتيفات:</p>
+                <a href="https://www.youtube.com/results?search_query=الارجوزة+السنية+في+سيرة+خير+البرية+ظفر+النتيفات" target="_blank" class="btn btn-primary">
+                    ▶ بینینی ڤیدیۆ لە YouTube
+                </a>
+            </div>
+
+            <div class="card" style="border-top: 4px solid var(--primary-emerald);">
+                <h3>🎯 سیستەمی کویزی داینامیکی (Quiz Generator)</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">تکایە پێش دەستپێکردن ناوی تەواوی خۆت بنووسە:</p>
                 
-                <!-- Question Language Selector -->
-                <div class="option-box">
-                    <label id="ui-lbl-q-lang" class="option-label">🌐 زمانی پرسیارەکان:</label>
-                    <select id="q-lang-select">
-                        <option value="ckb" selected>کوردی (Kurdish)</option>
-                        <option value="ar">العربية (Arabic)</option>
-                        <option value="en">English (ئینگلیزی)</option>
-                        <option value="fa">فارسی (Persian)</option>
-                        <option value="tr">Türkçe (Turkish)</option>
-                    </select>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <!-- خانەی تۆمارکردنی ناو -->
+                    <div style="width: 100%; max-width: 300px;">
+                        <label><b>ناوی بەشداربوو / Your Name <span style="color:red;">*</span>:</b></label><br>
+                        <input type="text" id="participantName" class="input-control" placeholder="ناوی تەواوت بنووسە..." style="width: 100%; margin-top:0.3rem;" required>
+                    </div>
+
+                    <div>
+                        <label><b>جۆری کویز:</b></label><br>
+                        <select id="arjQuizType" class="select-control" style="margin-top:0.3rem;">
+                            <option value="meaning">کویزی مانا و تێگەیشتن (Comprehension)</option>
+                            <option value="vocab">کویزی مانای وشەکان (Vocabulary)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label><b>ژمارەی پرسیار:</b></label><br>
+                        <select id="arjQuizCount" class="select-control" style="margin-top:0.3rem;">
+                            <option value="5">5 پرسیار</option>
+                            <option value="10">10 پرسیار</option>
+                            <option value="20">20 پرسیار</option>
+                            <option value="30">30 پرسیار</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label><b>زمان / Language:</b></label><br>
+                        <select id="arjQuizLang" class="select-control" style="margin-top:0.3rem;">
+                            <option value="ckb">کوردی (Kurdish)</option>
+                            <option value="ar">العربية (Arabic)</option>
+                            <option value="en">English</option>
+                            <option value="fa">فارسی (Persian)</option>
+                            <option value="tr">Türkçe (Turkish)</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- Explanation Language Selector -->
-                <div class="option-box">
-                    <label id="ui-lbl-exp-lang" class="option-label">💡 زمانی ڕوونکردنەوە (ویکیپیدیا):</label>
-                    <select id="exp-lang-select">
-                        <option value="ckb" selected>کوردی (Kurdish)</option>
-                        <option value="ar">العربية (Arabic)</option>
-                        <option value="en">English (ئینگلیزی)</option>
-                        <option value="fa">فارسی (Persian)</option>
-                        <option value="tr">Türkçe (Turkish)</option>
-                    </select>
+                <button class="btn btn-primary" onclick="startArjuzahQuiz()">دروستکردنی کویز (Generate Quiz)</button>
+            </div>
+
+            <div id="arjuzahQuizContainer" class="card" style="display:none;"></div>
+
+            <!-- LEADERBOARD / TEACHER DASHBOARD FOR PARTICIPANTS -->
+            <div class="card" style="border-top: 4px solid var(--gold-accent);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <h3>👨‍🏫 لیستی ئەنجامی بەشداربووان (Teacher Dashboard & Leaderboard)</h3>
+                    <button class="btn btn-danger" onclick="clearLeaderboard()" style="font-size: 0.8rem; padding: 0.3rem 0.6rem;">🗑️ پاککردنەوەی لیستەکە</button>
                 </div>
-
-                <!-- Question Count Selector -->
-                <div class="option-box full-width-option">
-                    <label id="ui-lbl-count" class="option-label">🔢 ژمارەی پرسیارەکان:</label>
-                    <select id="question-count-select" style="text-align: center; font-weight: bold; color: #f59e0b;">
-                        <option value="10">١٠ پرسیار</option>
-                        <option value="20">٢٠ پرسیار</option>
-                        <option value="30">٣٠ پرسیار</option>
-                        <option value="40">٤٠ پرسیار</option>
-                        <option value="50">٥٠ پرسیار</option>
-                        <option value="100">١٠٠ پرسیار</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="button-group">
-                <button id="ui-btn-start" onclick="startQuiz()" class="btn btn-primary">
-                    🎯 دەستپێکردنی کویز
-                </button>
-                <button id="ui-btn-poem" onclick="showPoemModal()" class="btn btn-secondary">
-                    📜 خوێندنەوەی الأرجوزة
-                </button>
-            </div>
-        </div>
-
-        <!-- Quiz Screen -->
-        <div id="quiz-card" class="card hidden">
-            <!-- Progress Bar -->
-            <div class="quiz-status">
-                <span id="question-tracker" class="badge">پرسیاری ١</span>
-                <span id="score-tracker" class="badge badge-score">نمرە: ٠</span>
-            </div>
-            <div class="progress-bar-container">
-                <div id="progress-bar" class="progress-bar"></div>
-            </div>
-
-            <!-- Question -->
-            <h3 id="question-text" class="question-title">
-                پرسیار لێرە دەردەکەوێت...
-            </h3>
-
-            <!-- Options Container -->
-            <div id="options-container" class="options-list"></div>
-
-            <!-- Feedback Message -->
-            <div id="feedback" class="feedback-box hidden"></div>
-
-            <!-- Wiki Explanation Box -->
-            <div id="explanation-box" class="explanation-card hidden">
-                <div id="ui-exp-title" class="explanation-title">💡 ڕوونکردنەوەی زیاتر (لە ویکیپیدیاوە):</div>
-                <p id="explanation-text" class="explanation-text"></p>
-                
-                <div id="wiki-google-btn-container" class="google-btn-box hidden">
-                    <a id="wiki-google-link" href="#" target="_blank" class="google-link">
-                        🔍 لە گووگڵ بەسەر ویکیپیدیادا باسی بکە
-                    </a>
+                <p style="color: var(--text-muted); margin-top: 0.3rem; font-size: 0.9rem;">
+                    هەر کەسێک ناوی بنووسێت و کویزەکە تەواو بکات، ئەنجامەکەی لەم لیستەی خوارەوەدا دەپارێزرێت:
+                </p>
+                <div style="overflow-x: auto;">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ناوی بەشداربوو</th>
+                                <th>نمرە (Score)</th>
+                                <th>جۆری کویز</th>
+                                <th>ڕێکەوت و کات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody">
+                            <!-- ئەنجامەکان لێرە بە داینامیکی باردەکرێن -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Next Button -->
-            <button id="next-btn" onclick="nextQuestion()" class="btn btn-primary hidden" style="width: 100%;">
-                پرسیاری دواتر ⬅️
-            </button>
-        </div>
+            <div class="card">
+                <h3>📜 دەقی تەواوی (الأرجوزة السنية في ذكر سيرة خير البرية)</h3>
+                <div class="arabic" style="line-height: 2.2; margin-top: 1rem; max-height: 550px; overflow-y: auto; padding-right: 1rem; background: var(--bg-primary); padding: 1.2rem; border-radius: 8px;">
+                    1. الْحَمْدُ لِلَّهِ الَّذِي هَدَانَا ... لِدِينِهِ الْقَوِيمِ وَاجْتَبَانَا<br>
+                    2. ثُمَّ الصَّلَاةُ وَالسَّلَامُ السَّارِي ... عَلَى الرَّسُولِ الْمُصْطَفَى الْمُخْتَارِ<br>
+                    3. وَآلِهِ وَصَحْبِهِ الأَبْرَارِ ... مَا غَرَّدَ الْقُمْرِيُّ فِي الأَسْحَارِ<br>
+                    4. وَبَعْدُ فَاعْلَمْ أَنَّ خَيْرَ السِّيرَةِ ... سِيرَةُ بَدْرِ الأُمَّةِ الْمُنِيرَةِ<br>
+                    5. مَوْلِدُهُ فِي عَامِ فِيلٍ قَدْ أَتَى ... فِي شَهْرِ رَبِيعٍ الأَوَّلِ يَا فَتَى<br>
+                    6. وَمَاتَ عَبْدُ اللَّهِ قَبْلَ وِلاَدَتِهْ ... وَأُمُّهُ كَرِيمَةٌ فِي شِينَتِهْ<br>
+                    7. وَأَرْضَعَتْهُ سَعْدِيَّةُ حَلِيمَة ... فَبُورِكَتْ بِقُرْبِهِ الْكَرِيمَة<br>
+                    8. وَشُقَّ صَدْرُ الْمُصْطَفَى صَغِيرَا ... وَعَادَ لِلأُمِّ نَقِيًّا بَارَّا<br>
+                    9. وَمَاتَتِ الأُمُّ وَلَهُ سِتُّ سِنِينْ ... وَكَفَلَهُ الْجَدُّ الرَّحِيمُ فِي الْمَكِينْ<br>
+                    10. ثُمَّ جَدُّهُ ابْنُ عَبْدِ الْمُطَّلِبْ ... تُوُفِّيَ وَكَفَلَهُ ثُمَّ النَّصَبْ (مَامُهُ أَبُو طَالِبٍ)<br>
+                    11. وَسَارَ فِي تِجَارَةٍ كَيْ يَكْسِبَا ... مَعَ عَمِّهِ لِلشَّامِ يَهْدِي السُّبُلاَ<br>
+                    12. فَرَآهُ بَحِيرَى الرَّاهِبُ الْمُصَادِقُ ... وَقَالَ هَذَا هُوَ النَّبِيُّ الصَّادِقُ<br>
+                    13. ثُمَّ زَوَاجُهُ بِمَكَّةَ انْعَقَدْ ... مِنْ خَدِيجَةَ الَّتِي لَهَا الشَّرَفُ اسْتَنَدْ<br>
+                    14. وَلَهُ مِنَ الْعُمْرِ خَمْسٌ وَعِشْرُونْ ... وَفِي خَدِيجَةَ الفَضْلُ وَالْمَصُونْ<br>
+                    15. وَبَعْدَ أَرْبَعِينَ عَاماً أَوْفَى ... نَزَلَ جِبْرِيلُ عَلَيْهِ بِالْوَحَى<br>
+                    16. فَقَالَ اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي ... خَلَقَ الإِنْسَانَ وَهَدَى لِلَّذِي<br>
+                    17. فَقَامَ بِالدَّعْوَةِ فِي خَفَاءِ ... ثَلاَثَ أَعْوَامٍ مَعَ الصَّفَاءِ<br>
+                    18. ثُمَّ أَتَاهُ الأَمْرُ بِالْجِهَارِ ... فَأَعْلَنَ الدِّينَ بِلاَ فِرَارِ<br>
+                    19. وَأُوذِيَ الأَصْحَابُ فِي سَبِيلِهِ ... وَصَبَرُوا لِلَّهِ فِي سَبِيلِهِ<br>
+                    20. فَهاَجَرُوا لِأَرْضِ الْحَبَشَةِ السَّنِيَّة ... مَرَّتَيْنِ لِلتَّمْكِينِ وَالْمَزِيَّة<br>
+                    21. وَفِي عَاشِرِ السِّنِينَ كَانَ الْحُزْنُ ... بِمَوْتِ خَدِيجَةَ وَعَمٍّ يَعْنُو<br>
+                    22. وَأَسْرَى بِهِ الرَّحْمَنُ لَيْلاً سَامِيَا ... لِلْمَسْجِدِ الأَقْصَى وَكَانَ هَادِيَا<br>
+                    23. وَعَرَجَ النَّبِيُّ لِلسَّمَاوَاتِ العُلَى ... وَفُرِضَتْ خَمْسُ الصَّلَوَاتِ يَا مَلَا<br>
+                    24. ثُمَّ إِلىَ الْمَدِينَةِ الْمُنَوَّرَة ... هَاجَرَ بِالأَمْرِ وَنَفْسٍ طَاهِرَة<br>
+                    25. وَبَنَى مَسْجِدَهُ الشَّرِيفَ الأَعْظَمَا ... وَآخَى بَيْنَ جُنْدِهِ لِيَسْلَمَا<br>
+                    26. وَغَزْوَةُ الْبَدْرِ العَظِيمِ الْكُبْرَى ... فَرْقَانُ حَقٍّ فِي الأَنَامِ يُتْرَى<br>
+                    27. وَبَعْدَهَا أُحُدٌ وَفِيهَا العِبَرُ ... وَالْخَنْدَقُ الْفَذُّ الَّذِي يُعْتَبَرُ<br>
+                    28. وَفَتْحُ مَكَّةَ العَظِيمُ الأَشْهَرُ ... دَخَلَهَا صَلَّى عَلَيْهِ مَنُّ بَرُّ<br>
+                    29. وَحَجَّ حَجَّةَ الوَدَاعِ الصَّادِقَة ... وَبَثَّ فِيهَا الأَحْكَامَ المُوافِقَة<br>
+                    30. وَفِي ثَلاَثَةٍ وَسِتِّينَ سَنَة ... تُوُفِّيَ المُصْطَفَى المَنُونُ وَدَنَا<br>
+                    31. فَصَلَّى اللَّهُ سَرْمَداً عَلَيْهِ ... وَآلِهِ وَمَنْ دَعَا إِلَيْهِ
+                </div>
+            </div>
+        </section>
 
-        <!-- Result Screen -->
-        <div id="result-card" class="card result-box hidden">
-            <div style="font-size: 4rem; margin-bottom: 1rem;" id="result-emoji">🎉</div>
-            <h2 id="ui-result-title" class="welcome-title">تاقیکردنەوەکەت تەواو کرد!</h2>
-            <p id="ui-result-desc" class="welcome-desc">ئەمەش ئەنجامی کۆتایی زانیارییەکانتە:</p>
-            
-            <div class="result-score-card">
-                <p class="result-score" id="final-score">٠ / ٠</p>
-                <p style="color: #94a3b8; font-weight: 600;" id="result-percentage">٠% وەڵامی ڕاست</p>
+        <!-- 5. ULTRA DEEP TIMELINE PAGE -->
+        <section id="timeline" class="page">
+            <h2>Comprehensive Ultra-Deep Seerah Chronology (کرۆنۆلۆجیای زۆر قووڵی سیرە)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">نەخشەیەکی مێژوویی بێوێنە و ژمارە بە ژمارە، کە هەموو ڕووداوە سەربازی، سیاسی، بەردی بناغەییەکان و ژیانی تایبەتی پێغەمبەر ﷺ شیدەکاتەوە:</p>
+            <div class="timeline" id="timelineContainer"></div>
+        </section>
+
+        <!-- 6. IMPORTANT PEOPLE PAGE -->
+        <section id="people" class="page">
+            <h2>Important Figures in the Seerah</h2>
+            <div class="level-grid" id="peopleGrid" style="margin-top: 1rem;"></div>
+        </section>
+
+        <!-- 7. MY NOTES & REVISION PAGE -->
+        <section id="notes" class="page">
+            <h2>My Study & Revision Hub</h2>
+            <div class="card">
+                <h3>Bookmarked Lessons</h3>
+                <ul id="bookmarkedList" style="margin-top: 0.5rem; padding-left: 1.2rem;"></ul>
             </div>
 
-            <div class="button-group" style="max-width: 25rem; margin: 0 auto;">
-                <button id="ui-btn-restart" onclick="restartQuiz()" class="btn btn-primary">
-                    🔄 دووبارەکردنەوە
-                </button>
-                <button id="ui-btn-home" onclick="goHome()" class="btn btn-secondary">
-                    🏠 پەڕەی سەرەکی
-                </button>
+            <div class="card">
+                <h3>Saved Study Notes</h3>
+                <div id="savedNotesContainer" style="margin-top: 0.5rem;"></div>
             </div>
-        </div>
-
+        </section>
     </main>
 
-    <!-- Modal for Showing Full Poem -->
-    <div id="poem-modal" class="modal-overlay hidden">
-        <div class="modal-content">
+    <!-- KEYBOARD SHORTCUTS SETTINGS & GUIDE MODAL -->
+    <div id="shortcutModal" class="modal-overlay">
+        <div class="modal-card">
             <div class="modal-header">
-                <div>
-                    <h3 class="font-poem" style="color: #f59e0b; font-weight: bold; font-size: 1.1rem;">الأرجوزة المئية في ذكر حال أشرف البرية</h3>
-                    <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.2rem;">نظم: القاضي علي بن علي بن أبي العز الحنفي</p>
+                <h3>⌨️ Keyboard Shortcuts Guide & Settings</h3>
+                <button class="close-btn" onclick="closeShortcutGuide()">✕</button>
+            </div>
+            
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+                Keyboard shortcuts allow you to navigate through Seerah Academy quickly without using your mouse.
+            </p>
+
+            <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--border-color);">
+                <h4 style="color: var(--primary-emerald); margin-bottom: 0.5rem;">💡 How to use shortcuts:</h4>
+                <ol style="padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.8;">
+                    <li>Press and hold the <kbd>Ctrl</kbd> key (or <kbd>Cmd ⌘</kbd> on Mac).</li>
+                    <li>While holding <kbd>Ctrl</kbd>, press the designated letter key (e.g., <kbd>H</kbd> for Home).</li>
+                    <li>Shortcuts are automatically disabled when typing inside input boxes or text areas so they won't trigger while writing notes or searching.</li>
+                </ol>
+            </div>
+
+            <h4>List of Available Shortcuts:</h4>
+            <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.8rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid var(--border-color);">
+                    <span>Go to Home Page</span>
+                    <div><kbd>Ctrl</kbd> + <kbd>H</kbd> / <kbd>Cmd</kbd> + <kbd>H</kbd></div>
                 </div>
-                <button onclick="closePoemModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid var(--border-color);">
+                    <span>Go to Learning Roadmap</span>
+                    <div><kbd>Ctrl</kbd> + <kbd>L</kbd> / <kbd>Cmd</kbd> + <kbd>L</kbd></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid var(--border-color);">
+                    <span>Go to Current Lesson</span>
+                    <div><kbd>Ctrl</kbd> + <kbd>E</kbd> / <kbd>Cmd</kbd> + <kbd>E</kbd></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid var(--border-color);">
+                    <span>Go to Arjuzah & Quiz</span>
+                    <div><kbd>Ctrl</kbd> + <kbd>Q</kbd> / <kbd>Cmd</kbd> + <kbd>Q</kbd></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid var(--border-color);">
+                    <span>Go to Deep Timeline</span>
+                    <div><kbd>Ctrl</kbd> + <kbd>D</kbd> / <kbd>Cmd</kbd> + <kbd>D</kbd></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem;">
+                    <span>Go to Important People</span>
+                    <div><kbd>Ctrl</kbd> + <kbd>P</kbd> / <kbd>Cmd</kbd> + <kbd>P</kbd></div>
+                </div>
             </div>
 
-            <div style="background-color: #020617; padding: 0.75rem; border-bottom: 1px solid #1e293b; display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-                <a href="https://archive.org/details/100_20200831" target="_blank" style="background-color: rgba(245,158,11,0.1); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); padding: 0.4rem 0.8rem; border-radius: 0.5rem; text-decoration: none; font-size: 0.75rem; font-weight: 600;">
-                    📥 داگرتنی فایلی PDF
-                </a>
-                <a href="https://ar.islamway.net/collection/15119" target="_blank" style="background-color: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.3); padding: 0.4rem 0.8rem; border-radius: 0.5rem; text-decoration: none; font-size: 0.75rem; font-weight: 600;">
-                    🎧 گوێگرتن لە دەنگ (MP3)
-                </a>
-            </div>
-
-            <div id="poem-content" class="modal-body font-poem"></div>
-
-            <div class="modal-footer">
-                <button id="ui-btn-close-modal" onclick="closePoemModal()" class="btn btn-secondary" style="padding: 0.5rem 1.5rem; font-size: 0.85rem;">
-                    داخستن
-                </button>
-            </div>
+            <button class="btn btn-primary" onclick="closeShortcutGuide()" style="margin-top: 1.2rem; width: 100%; justify-content: center;">Got it!</button>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer id="ui-footer">
-        درووستکراوە بۆ بڵاوکردنەوەی هۆنراوەی الأرجوزة المئية
-    </footer>
-
+    <!-- JavaScript Logic -->
     <script>
-        const translations = {
-            ckb: {
-                dir: "rtl",
-                title: "📜 تاقیکردنەوەی الأرجوزة المئية",
-                sub: "پرسیارەکان + ڕوونکردنەوەی فێرکاری لە ویکیپیدیاوە",
-                welcomeTitle: "بەخێربێیت بۆ بەرنامەی الأرجوزة المئية",
-                welcomeDesc: "زمان، ژمارەی پرسیارەکان دیاری بکە بۆ دەستپێکردنی کویزەکە.",
-                lblQLang: "🌐 زمانی پرسیارەکان:",
-                lblExpLang: "💡 زمانی ڕوونکردنەوە (ویکیپیدیا):",
-                lblCount: "🔢 ژمارەی پرسیارەکان:",
-                btnStart: "🎯 دەستپێکردنی کویز",
-                btnPoem: "📜 خوێندنەوەی الأرجوزة",
-                qTracker: "پرسیاری",
-                scoreTracker: "نمرە",
-                expTitle: "💡 ڕوونکردنەوەی زیاتر (لە ویکیپیدیاوە):",
-                btnNext: "پرسیاری دواتر ⬅️",
-                correctMsg: "✨ وەڵامەکەت تەواوە و ڕاستە.",
-                wrongMsg: "❌ وەڵامەکەت هەڵەیە! وەڵامی ڕاست:",
-                resTitle: "تاقیکردنەوەکەت تەواو کرد!",
-                resDesc: "ئەمەش ئەنجامی کۆتایی زانیارییەکانتە:",
-                btnRestart: "🔄 دووبارەکردنەوە",
-                btnHome: "🏠 پەڕەی سەرەکی",
-                btnCloseModal: "داخستن",
-                footer: "درووستکراوە بۆ بڵاوکردنەوەی هۆنراوەی الأرجوزة المئية",
-                btnWikiGoogle: "🔍 لە گووگڵ بەسەر ویکیپیدیادا باسی بکە"
-            },
-            ar: {
-                dir: "rtl",
-                title: "📜 اختبار الأرجوزة المئية",
-                sub: "الأسئلة + الشرح التعليمي من ويكيبيديا",
-                welcomeTitle: "مرحباً بك في برنامج الأرجوزة المئية",
-                welcomeDesc: "اختر اللغة وعدد الأسئلة للبدء في الاختبار.",
-                lblQLang: "🌐 لغة الأسئلة:",
-                lblExpLang: "💡 لغة الشرح (ويكيبيديا):",
-                lblCount: "🔢 عدد الأسئلة:",
-                btnStart: "🎯 بدء الاختبار",
-                btnPoem: "📜 قراءة الأرجوزة",
-                qTracker: "السؤال",
-                scoreTracker: "النتيجة",
-                expTitle: "💡 شرح إضافي (من ويكيبيديا):",
-                btnNext: "السؤال التالي ⬅️",
-                correctMsg: "✨ إجابة صحيحة وممتازة.",
-                wrongMsg: "❌ إجابة خاطئة! الإجابة الصحيحة هي:",
-                resTitle: "لقد أكملت الاختبار!",
-                resDesc: "هذه هي النتيجة النهائية لمعلوماتك:",
-                btnRestart: "🔄 إعادة الاختبار",
-                btnHome: "🏠 الصفحة الرئيسية",
-                btnCloseModal: "إغلاق",
-                footer: "تم إنشاؤه لنشر منظومة الأرجوزة المئية",
-                btnWikiGoogle: "🔍 ابحث عن الموضوع في ويكيبيديا عبر جوجل"
-            },
-            en: {
-                dir: "ltr",
-                title: "📜 Al-Arjuzah Al-Maiyyah Quiz",
-                sub: "Questions + Educational explanations from Wikipedia",
-                welcomeTitle: "Welcome to Al-Arjuzah Al-Maiyyah Program",
-                welcomeDesc: "Select language and number of questions to start the quiz.",
-                lblQLang: "🌐 Questions Language:",
-                lblExpLang: "💡 Explanation Language (Wikipedia):",
-                lblCount: "🔢 Number of Questions:",
-                btnStart: "🎯 Start Quiz",
-                btnPoem: "📜 Read Poem",
-                qTracker: "Question",
-                scoreTracker: "Score",
-                expTitle: "💡 Further Explanation (Wikipedia):",
-                btnNext: "Next Question ➡️",
-                correctMsg: "✨ Correct answer!",
-                wrongMsg: "❌ Incorrect answer! Correct answer is:",
-                resTitle: "Quiz Completed!",
-                resDesc: "Here is your final score:",
-                btnRestart: "🔄 Restart",
-                btnHome: "🏠 Home Page",
-                btnCloseModal: "Close",
-                footer: "Created for spreading knowledge of Al-Arjuzah Al-Maiyyah",
-                btnWikiGoogle: "🔍 Read more on Wikipedia via Google"
-            },
-            fa: {
-                dir: "rtl",
-                title: "📜 آزمون منظومه الارجوزة المئية",
-                sub: "سوالات + توضیحات آموزشی از ویکی‌پدیا",
-                welcomeTitle: "به برنامه آزمون الارجوزة المئية خوش آمدید",
-                welcomeDesc: "زبان و تعداد سوالات را برای شروع آزمون انتخاب کنید.",
-                lblQLang: "🌐 زبان سوالات:",
-                lblExpLang: "💡 زبان توضیحات (ویکی‌پدیا):",
-                lblCount: "🔢 تعداد سوالات:",
-                btnStart: "🎯 شروع آزمون",
-                btnPoem: "📜 خواندن منظومه",
-                qTracker: "سوال",
-                scoreTracker: "امتیاز",
-                expTitle: "💡 توضیحات بیشتر (از ویکی‌پدیای فارسی):",
-                btnNext: "سوال بعدی ⬅️",
-                correctMsg: "✨ پاسخ شما کاملاً درست است.",
-                wrongMsg: "❌ پاسخ اشتباه است! پاسخ درست:",
-                resTitle: "آزمون را به پایان رساندید!",
-                resDesc: "این نتیجه نهایی دانش شماست:",
-                btnRestart: "🔄 تکرار آزمون",
-                btnHome: "🏠 صفحه اصلی",
-                btnCloseModal: "بستن",
-                footer: "طراحی شده برای انتشار منظومه الارجوزة المئية",
-                btnWikiGoogle: "🔍 جستجوی موضوع در ویکی‌پدیا از طریق گوگل"
-            },
-            tr: {
-                dir: "ltr",
-                title: "📜 El-Ürcüzetü'l-Meiyye Testi",
-                sub: "Sorular + Vikipedi'den eğitici açıklamalar",
-                welcomeTitle: "El-Ürcüzetü'l-Meiyye Programına Hoş Geldiniz",
-                welcomeDesc: "Teste başlamak için dili ve soru sayısını seçin.",
-                lblQLang: "🌐 Soru Dili:",
-                lblExpLang: "💡 Açıklama Dili (Vikipedi):",
-                lblCount: "🔢 Soru Sayısı:",
-                btnStart: "🎯 Testi Başlat",
-                btnPoem: "📜 Kasideyi Oku",
-                qTracker: "Soru",
-                scoreTracker: "Puan",
-                expTitle: "💡 Detaylı Açıklama (Vikipedi):",
-                btnNext: "Sonraki Soru ➡️",
-                correctMsg: "✨ Doğru cevap!",
-                wrongMsg: "❌ Yanlış cevap! Doğru cevap:",
-                resTitle: "Testi Tamamladınız!",
-                resDesc: "İşte nihai sonucunuz:",
-                btnRestart: "🔄 Yeniden Başlat",
-                btnHome: "🏠 Ana Sayfa",
-                btnCloseModal: "Kapat",
-                footer: "El-Ürcüzetü'l-Meiyye şiirini yaymak için oluşturulmuştur",
-                btnWikiGoogle: "🔍 Google üzerinden Vikipedi'de oku"
-            }
+        const seerahData = {
+            levels: [
+                { id: 1, name: "Level 1: Seerah Fundamentals", desc: "Understanding the importance and methodology." },
+                { id: 2, name: "Level 2: Before Prophethood", desc: "Arabian Peninsula prior to Islam, lineage, birth." },
+                { id: 3, name: "Level 3: Early Makkah", desc: "First revelation and public invitation." },
+                { id: 4, name: "Level 4: Persecution & Migration", desc: "Hardships, Abyssinia, Isra & Mi'raj, Hijrah." },
+                { id: 5, name: "Level 5: Madinah", desc: "Establishment of the first Muslim community." },
+                { id: 6, name: "Level 6: Major Battles & Treaties", desc: "Badr, Uhud, Khandaq, Hudaybiyyah." },
+                { id: 7, name: "Level 7: Conquest of Makkah", desc: "Events leading to victory." },
+                { id: 8, name: "Level 8: Farewell Hajj & Final Days", desc: "The Farewell Sermon and passing." },
+                { id: 9, name: "Level 9: Advanced Seerah", desc: "Pedagogical methods and strategies." }
+            ],
+            lessons: [
+                {
+                    id: 101,
+                    levelId: 1,
+                    title: "Lesson 1: What is the Seerah and Why Study It?",
+                    simpleExplanation: "The word 'Seerah' means a path or biography. Studying the Seerah means learning how Prophet Muhammad ﷺ lived his life as a leader, husband, teacher, and servant of Allah.",
+                    people: ["Prophet Muhammad ﷺ"],
+                    dates: "Ongoing foundation",
+                    quranRef: "Say, [O Muhammad], 'If you should love Allah, then follow me...'",
+                    hadithRef: "Sahih Bukhari #15: 'None of you has faith until I am more beloved to him...'",
+                    authenticity: "Authentic",
+                    remember: "The Seerah is the practical implementation of the Qur'an in everyday life.",
+                    lessonsLearned: "By studying his life, we learn how to handle hardship and worship Allah.",
+                    quiz: {
+                        question: "What does the word 'Seerah' literally mean?",
+                        options: ["A legal ruling", "A journey or path/biography", "A battle strategy", "A poetry collection"],
+                        correct: 1,
+                        explanation: "Seerah literally means a path or trajectory.",
+                        wikiTitle: "Sirah_of_Muhammad",
+                        wikiInfo: "In Islamic terminology, Sīrah or Al-sīrah al-nabawiyyah refers to the biography of the Islamic prophet Muhammad. It covers his life, teachings, military expeditions, and actions."
+                    },
+                    teacherMode: {
+                        keyPoints: ["Define Seerah clearly", "Explain that love stems from knowing him"],
+                        childVer: "Seerah is telling the wonderful true story of Allah's final messenger.",
+                        teenVer: "Seerah is a practical blueprint for life.",
+                        questions: ["Why is it important to learn about someone's life?"],
+                        mistakesToAvoid: "Don't present Seerah as just historical dates.",
+                        summary: "Seerah translates Islamic principles into practical action."
+                    }
+                },
+                {
+                    id: 201,
+                    levelId: 2,
+                    title: "Lesson 2: The Year of the Elephant and Birth",
+                    simpleExplanation: "Prophet Muhammad ﷺ was born in Makkah during the 'Year of the Elephant' (around 570 CE).",
+                    people: ["Abdul-Muttalib", "Aminah", "Abraha"],
+                    dates: "570 CE",
+                    quranRef: "Surah Al-Fil (105:1-5)",
+                    hadithRef: "Sahih Muslim #1162",
+                    authenticity: "Authentic",
+                    remember: "Allah protected the Ka'bah in the birth year of His final Messenger ﷺ.",
+                    lessonsLearned: "Allah controls all affairs.",
+                    quiz: {
+                        question: "In which year was Prophet Muhammad ﷺ born?",
+                        options: ["Year of the Trench", "Year of Sorrow", "Year of the Elephant", "Year of Delegations"],
+                        correct: 2,
+                        explanation: "He was born in the Year of the Elephant.",
+                        wikiTitle: "Year_of_the_Elephant",
+                        wikiInfo: "The Year of the Elephant is the name given in Islamic history to the year approximately equal to 570 CE, in which Prophet Muhammad ﷺ was born. It is named after the failed invasion of Mecca by Abraha, ruler of Yemen, who led an army including war elephants."
+                    },
+                    teacherMode: {
+                        keyPoints: ["Protection of the Ka'bah", "Orphanhood"],
+                        childVer: "Bad men tried to ruin the Ka'bah, but Allah protected it with small birds!",
+                        teenVer: "The destruction of Abraha's army set the historical stage.",
+                        questions: ["How does Allah protect what is sacred?"],
+                        mistakesToAvoid: "Avoid confirming exact birth dates with 100% certainty.",
+                        summary: "Divine protection heralded the final Messenger ﷺ."
+                    }
+                }
+            ],
+            peopleList: [
+                { name: "Khadijah bint Khuwaylid (RA)", role: "First Wife & Believer", desc: "A noble businesswoman who supported the Prophet ﷺ." },
+                { name: "Abu Bakr As-Siddiq (RA)", role: "Closest Companion", desc: "The first adult male to accept Islam without hesitation." },
+                { name: "Ali ibn Abi Talib (RA)", role: "Cousin & 4th Caliph", desc: "Renowned for courage, scholarship, and early acceptance of Islam." },
+                { name: "Abu Talib", role: "Protective Uncle", desc: "Protected the Prophet ﷺ against Quraish hostility." }
+            ],
+            timelineList: [
+                {
+                    year: "٥٧٠ زایینی (عام الفيل - پێش کۆچی)",
+                    title: "قۆناغی پێش بنەماکانی پێغەمبەرایەتی، لەدایکبوون و ساڵی فیل",
+                    desc: "لەدایکبوونی پێغەمبەری خودا ﷺ لە ۱۲ی ڕەبیعی یەکەم (یان ۹ی ڕەبیعی یەکەم بەپێی توێژینەوەی ئەلموبارەکفوری). کۆچی دوایی باوکی (عەبدوڵڵای کوڕی عەبدولموتەڵیب) لە مەدینە (یەثریب) لەکاتێکدا پێغەمبەر ﷺ هێشتا لە سکی دایکیدا بوو.",
+                    details: [
+                        "<b>هێرشی ئەبرەهەی حەبەشی:</b> هەوڵدان بۆ تێکدانی کەعبە و تێکشکاندنی سوپاکەی بە پۆلێک باڵندە (تَیْراً أَبَابِیلَ).",
+                        "<b>شیرخۆرین لە لادێ:</b> سپاردنی بە حەلیمەی سەعدییە لە بنەماڵەی بەنو سەعد بۆ وەرگرتنی فەساهەتی زمانی عەرەبی و هەوای پاکی دەشتایی.",
+                        "<b>ڕووداوی شق الصدر (٤ ساڵی):</b> پاککردنەوە و شوشتنی دڵی پیرۆزی پێغەمبەر ﷺ لەلایەن جبرئیلەوە بە ئاوی زەمزەم."
+                    ]
+                },
+                {
+                    year: "٥٧٦ - ٥٩٥ زایینی (تەمەنی ٦ تا ٢٥ ساڵی)",
+                    title: "سێوڕیی، بەخێوکردن، گەشەکردن و هاوسەرگیری لەگەڵ دایکمان خەدیجە",
+                    desc: "قۆناغی دروستبوونی کەسایەتی 'الرضا والأمين' (دەستپاک و ڕاستگۆ) لە ناو کۆمەڵگەی مەککەدا.",
+                    details: [
+                        "<b>٥٧٦ ز (٦ ساڵی):</b> کۆچی دوایی دایکی (ئامینەی کچی وەهب) لە ناوچەی 'ئەبوا' لە کاتی گەڕانەوەیان لە مەدینە. گواستنەوەی بەخێوکردنی بۆ لای باپێری (عەبدولموتەڵیب).",
+                        "<b>٥٧٨ ز (٨ ساڵی):</b> کۆچی دوایی باپێری. گواستنەوەی سەرپەرشتی بۆ لای مامی (ئەبو تالیب).",
+                        "<b>٥٨٢ ز (١٢ ساڵی):</b> یەکەم گەشتی بازرگانی بۆ شام لەگەڵ ئەبو تالیب و چاوپێکەوتن لەگەڵ دەروێش 'بەیحیرا' کە نیشانەکانی پێغەمبەرایەتی تێدا بەدی کرد.",
+                        "<b>جەنگی فجار و پەیمانی فزول:</b> بەشداریکردنی لە پەیمانێکدا بۆ بەرگری لە ستەملێکراوان لە مەککە.",
+                        "<b>٥٩٥ ز (٢٥ ساڵی):</b> گەشتی بازرگانی دووەم بۆ شام بە سەرمایەی خەدیجەی کچی خوەیلید بە هاوڕێیەتی (مَيسرة). دوابەدوای نیشاندانی ئەمانەت و پاکییەکەی، هاوسەرگیری لەگەڵ خەدیجە (تەمەن ٤٠ ساڵ) ئەنجامدا."
+                    ]
+                },
+                {
+                    year: "٦٠٥ زایینی (تەمەنی ٣٥ ساڵی)",
+                    title: "نوژەنکردنەوەی کەعبە و حیکمەتی دانانی 'الحجر الأسود'",
+                    desc: "ڕوودانی لافاوێک کە بووە هۆی تێکچوونی دیوارەکانی کەعبە. قورەیش بڕیاری نوژەنکردنەوەیان دا.",
+                    details: [
+                        "<b>کێشەی هۆزەکان:</b> ململانێ لەسەر ئەوەی کێ بەردی ڕەش لە شوێنی خۆی دابنێتەوە تا نەکشێتە ناو جەنگ.",
+                        "<b>حیکمەتی پێغەمبەر ﷺ:</b> بەردەکەی خستە سەر پارچە قوماشێک و داوای لە سەرۆکی هەموو هۆزەکان کرد گۆشەکانی بگرن، بەمەش ڕێگری لە خوێنڕشتن کرد."
+                    ]
+                },
+                {
+                    year: "٦١٠ زایینی (١ی پێغەمبەرایەتی - ٤٠ ساڵی)",
+                    title: "بەخشینی پێغەمبەرایەتی و دابەزینی یەکەم سرووش (الوحي)",
+                    desc: "گۆشەگیری لە ئەشکەوتی حێرا بۆ پەرستش و ڕامان. دابەزینی فریشتەی وەحی (جبرئیل).",
+                    details: [
+                        "<b>یەکەم ئایەت:</b> دابەزینی (اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ) لە مانگی ڕەمەزاندا.",
+                        "<b>پشتیوانی خەدیجە و وەرەقەی کوڕی نەوفەل:</b> دڵنیاکردنەوەی پێغەمبەر ﷺ لەوەی کە ئەوە هەمان سرووشە کە بۆ موسا دابەزیوە.",
+                        "<b>دەستپێکی داوەتی نهێنی:</b> بۆ ماوەی ٣ ساڵ. یەکەم بڕواداران: خەدیجە، ئەبو بەکر، عەلی، و زەیدی کوڕی حاریثە."
+                    ]
+                },
+                {
+                    year: "٦١٣ - ٦١٥ زایینی (٤ - ٥ی پێغەمبەرایەتی)",
+                    title: "داوەتی ئاشکرا و سەرەتای ئەشکەنجەدانی موسڵمانان",
+                    desc: "فەرمانی ئیلاهی بۆ ئاشکراکردنی ئیسلام (فَاصْدَعْ بِمَاؤُمْرُ).",
+                    details: [
+                        "<b>کێوی سەفا:</b> ڕاگەیاندنی پەیامی تۆوحید لەسەر کێوی سەفا و دژایەتی توندی ئەبو لهەب.",
+                        "<b>ماڵی ئەرقەم:</b> بوونی بە یەکەم ناوەندی پەروەردەیی نهێنی بۆ موسڵمانان.",
+                        "<b>ئەشکەنجەدان:</b> شەهیدبوونی یاسر و سومییە، و ئەشکەنجەدانی بیلاڵی حەبەشی.",
+                        "<b>٦١٥ ز:</b> یەکەم کۆچکردن بۆ حەبەشە لەژێر پاراستنی پاشای دادپەروەر (نەجاشی)."
+                    ]
+                },
+                {
+                    year: "٦١٧ - ٦١٩ زایینی (٧ - ٩ی پێغەمبەرایەتی)",
+                    title: "پەیماننامەی گەمارۆی ئابووری و کۆمەڵایەتی",
+                    desc: "قورەیش پەیماننامەیەکیان هەڵواسی بۆ بڕینی هرجۆرە مامەڵەیەک لەگەڵ بەنو هاشم و بەنو مەوتەڵیب.",
+                    details: [
+                        "<b>سێ ساڵی سەخت:</b> گەمارۆدان لە پێدەشتی ئەبو تالیب. خواردنی گەڵای دارەکان بەهۆی برسیەتییەوە.",
+                        "<b>دڕانی بەڵگەنامەکە:</b> خواردی بەڵگەنامەکە لەلایەن مێروولەی دارەوە بێجگە لە ناوی (باسمك اللهم)."
+                    ]
+                },
+                {
+                    year: "٦١٩ - ٦٢١ زایینی (١٠ - ١٢ی پێغەمبەرایەتی)",
+                    title: "عام الحزن (ساڵی خەم)، گەشتی تایف، ئیسرا و میعراج و بەیعەتەکان",
+                    desc: "ساڵی وەفاتی گەورەترین دوو پشتیوانی ماددی و مەعنەوی پێغەمبەر ﷺ.",
+                    details: [
+                        "<b>کۆچی دوایی ئەبو تالیب و خەدیجە:</b> لە دەستدانی دوو پایەی پاراستن.",
+                        "<b>گەشتی تایف:</b> ڕەتکردنەوەی داوەتەکە لەلایەن هۆزی سەقیف و بەردبارانکردنی پێغەمبەر ﷺ.",
+                        "<b>ڕووداوی ئیسرا و میعراج (٦٢١ ز):</b> گەشتی شەوانە بۆ پەرستگای ئەقسا و سەرکەوتن بۆ ئاسمانەکان، و فەرزبوونی ٥ نوێژەکە.",
+                        "<b>بەیعەتی عەقەبە:</b> پەیمانی خەڵکی مەدینە لەگەڵ پێغەمبەر ﷺ و ناردنی مصعب بن عمیر وەک یەکەم مامۆستا."
+                    ]
+                },
+                {
+                    year: "٦٢٢ زایینی (١ی کۆچی)",
+                    title: "کۆچی مەزن (الهجرة النبوية) و دامەزراندنی دەوڵەتی ئیسلامی",
+                    desc: "کۆچکردن لە مەککەوە بۆ مەدینە بە هەماهەنگی لەگەڵ ئەبو بەکری صدیق.",
+                    details: [
+                        "<b>ئەشکوتی سەور:</b> مانەوە بۆ ماوەی ٣ شەو بۆ داپۆشینی شوێنپێیەکان.",
+                        "<b>مزگەوتی قوباء:</b> دروستکردنی یەکەم مزگەوت لە ئیسلامدا.",
+                        "<b>بنیاتنانی مەدینە:</b> ۱. دروستکردنی مزگەوتی پێغەمبەر ﷺ. ۲. برایەتی لە نێوان کۆچبەران و پشتیوانان. ۳. نووسینەوەی دەستووری مەدینە."
+                    ]
+                },
+                {
+                    year: "٦٢٤ زایینی (٢ی کۆچی)",
+                    title: "گۆڕینی ڕووگە (القبلة) و جەنگی مەزنی بەدر",
+                    desc: "ساڵی یەکلاکەرەوەی هێزی عەسکەری و پەیوەندییە سیاسییەکان.",
+                    details: [
+                        "<b>گۆڕینی ڕووگە:</b> گۆڕینی ئاڕاستەی نوێژ بۆ کەعبەی پیرۆز.",
+                        "<b>فەرزبوونی ڕۆژوو و زەکات:</b> فەرزبوونی ڕۆژووی مانگی ڕەمەزان.",
+                        "<b>جەنگی بەدر:</b> ڕووبەڕووبوونەوەی ٣١٣ موسڵمان بەرامبەر ١٠٠٠ بێبڕوا. سەرکەوتنی گەورەی موسڵمانان."
+                    ]
+                },
+                {
+                    year: "٦٢٥ زایینی (٣ی کۆچی)",
+                    title: "جەنگی ئوحود (غزوة أحد) و دەربەدەرکردنی بەنو قەینوقاع",
+                    desc: "تۆڵەسەندنی قورەیش بۆ شکستی بەدر و پەندەکانی گوێڕایەڵی سەرکردایەتی.",
+                    details: [
+                        "<b>ڕووداوەکانی ئوحود:</b> بەشداری ٣٠٠٠ بێبڕوا بەرامبەر ٧٠٠ موسڵمان.",
+                        "<b>شەهیدبوونی حەمزە:</b> شەهیدبوونی حەمزەی کوڕی عەبدولموتەڵیب و ٧٠ هاوەڵی تر.",
+                        "<b>برینداربوونی پێغەمبەر ﷺ:</b> شکانی ددانی مبارەکی."
+                    ]
+                },
+                {
+                    year: "٦٢٦ - ٦٢٧ زایینی (٤ - ٥ی کۆچی)",
+                    title: "جەنگی خەندەق (الأحزاب) و ڕووداوەکانی بەنو قورەیظە",
+                    desc: "گەمارۆدانی گشتی مەدینە لەلایەن هاوپەیمانییەتی هۆزەکانەوە.",
+                    details: [
+                        "<b>غزوة الأحزاب:</b> پێشنیاری هەڵکەندنی خەندەق لەلایەن سەلمانی فارسییەوە.",
+                        "<b>شکستی هاوپەیمانان:</b> بەهۆی هەڵکردنی ڕەشەبای توند و زیرەکی سەربازی موسڵمانان.",
+                        "<b>سزادانی بەنو قورەیظە:</b> بەهۆی پەیمانشکێنی و خیانەتی نیشتمانی."
+                    ]
+                },
+                {
+                    year: "٦٢٨ زایینی (٦ی کۆچی)",
+                    title: "پەیماننامەی حودەیبییە و بەیعەتی ڕزوان",
+                    desc: "نەخشەرێگای ئاشتی و دانپێدانانی فەرمی قورەیش بە دەوڵەتی مەدینە.",
+                    details: [
+                        "<b>دەرچوون بۆ عومرە:</b> ڕۆشتنی ١٤٠٠ هاوەڵ بە بێچەک بۆ عومرە.",
+                        "<b>بیعة الرضوان:</b> پەیمانی هاوەڵان بۆ بەرگریکردن لە عوسمانی کوڕی عەفان.",
+                        "<b>ناردنی نامە نێودەوڵەتییەکان:</b> ناردنی پەیام بۆ هەراکلیوس، خوسرەو، نەجاشی، و مەقەوقیس."
+                    ]
+                },
+                {
+                    year: "٦٢٩ - ٦٣٠ زایینی (٧ - ٨ی کۆچی)",
+                    title: "جەنگی خەیبەر، جەنگی موئتە، و ڕزگارکردنی مەککە",
+                    desc: "کوژاندنەوەی دوا ناوەندەکانی ئاژاوەگێڕی و سەرکەوتنی گەورەی ئیسلام.",
+                    details: [
+                        "<b>٧ی کۆچی (خەیبەر):</b> کۆنتڕۆڵکردنی قەڵاکانی خەیبەر بە سەرکردایەتی عەلی کوڕی ئەبو تالیب.",
+                        "<b>٨ی کۆچی (جەنگی موئتە):</b> یەکەم ڕووبەڕووبوونەوەی سەربازی لەگەڵ ئیمپراتۆریەتی ڕۆم.",
+                        "<b>فتح مكة (٨ی کۆچی):</b> چوونە ناو مەککە بە ۱۰,۰۰۰ سەربازەوە و شکاندنی ۳٦۰ بتەکە."
+                    ]
+                },
+                {
+                    year: "٦٣٠ - ٦٣١ زایینی (٩ی کۆچی)",
+                    title: "جەنگی حونەین، گەمارۆی تایف، جەنگی تەبووک و ساڵی شاندەکان",
+                    desc: "تەواوبوونی دەسەڵاتی ئیسلام لە تەواوی نیمچە دوورگەی عەرەبیدا.",
+                    details: [
+                        "<b>غزوة حنين:</b> سەرکەوتن لە کۆتاییدا بەسەر هۆزی سەقیف و هەوازندا.",
+                        "<b>غزوة تبوك:</b> دوا جەنگی پێغەمبەر ﷺ بەرامبەر ڕۆمەکان.",
+                        "<b>عام الوفود:</b> هاتنی بەردەوامی هۆزەکانی عەرەب بۆ مەدینە بۆ بەئیسلامبوون."
+                    ]
+                },
+                {
+                    year: "٦٣٢ زایینی (١٠ - ١١ی کۆچی)",
+                    title: "حەجی ماڵئاوایی، داڕژانی دوایین ئایەت و وەفات",
+                    desc: "تەواوبوونی پەیامی ئیسلامی و گەڕانەوەی گیانی پیرۆزی پێغەمبەر ﷺ بۆ لای پەروەردگار.",
+                    details: [
+                        "<b>حەجی ماڵئاوایی:</b> ئەنجامدانی حەج لەگەڵ زیاتر لە ۱۰۰,۰۰۰ هاوەڵ و خۆتبەی ماڵئاوایی.",
+                        "<b>دابەزینی دوا ئایەت:</b> (الْيَوْمَ أَكْمَلْتُ لَكُمْ دِينَكُمْ...).",
+                        "<b>وەفات:</b> وەفاتی لە تەمەنی ٦٣ ساڵیدا لەکاتێکدا دوا قسەی (اللهم الرفيق الأعلى) بوو."
+                    ]
+                }
+            ]
         };
 
-        const poemLines = [
-            ["الْحَمْدُ لِلَّهِ الْقَدِيمِ الْبَارِي", "ثُمَّ الصَّلَاةُ وَالسَّلَامُ السَّارِي"],
-            ["عَلَى رَسُولِ اللَّهِ خَيْرِ الْخَلْقِ", "وَآلِهِ وَصَحْبِهِ وَالْحَقِّ"],
-            ["مَوْلِدُهُ فِي عَامِ الْفِيلِ زَكَا", "فِي يَوْمِ الْاثْنَيْنِ الرَّبِيعِيِّ حَكَى"],
-            ["وَبَعْدَ سِتٍّ مَاتَتِ الأُمُّ الرَّؤُوفُ", "فَكِفْلُ جَدِّهِ لَهُ شَيْءٌ طَرِيفٌ"],
-            ["وَبَعْدَهُمَا الإِسْرَاءُ وَالْمِعْرَاجُ", "وَفَرْضُ خَمْسِ صَلَوَاتٍ تُعَاجُ"]
-        ];
-
-        const poemQuestions = [
-            { 
-                q: {
-                    ckb: "کێ دانەری هۆنراوەی «الأرجوزة المئية»یە؟",
-                    ar: "من هو مؤلف منظومة «الأرجوزة المئية»؟",
-                    en: "Who is the author of 'Al-Arjuzah Al-Maiyyah'?",
-                    fa: "شاعر منظومه «الارجوزة المئية» چه کسی است؟",
-                    tr: "'El-Ürcüzetü'l-Meiyye' manzumesinin müellifi kimdir?"
-                },
+        const arjuzahVocabData = [
+            {
+                q: "ما معنى كلمة 'الْقَوِيمِ' في البيت الأول؟ (لِدِينِهِ الْقَوِيمِ وَاجْتَبَانَا)",
                 opts: {
-                    ckb: ["ابن أبي العز الحنفي", "الإمام النووي", "ابن كثير", "ابن حجر"],
-                    ar: ["ابن أبي العز الحنفي", "الإمام النووي", "ابن كثير", "ابن حجر"],
-                    en: ["Ibn Abi al-Izz al-Hanafi", "Imam al-Nawawi", "Ibn Kathir", "Ibn Hajar"],
-                    fa: ["ابن ابی العز الحنفی", "امام نووی", "ابن کثیر", "ابن حجر"],
-                    tr: ["İbn Ebî'l-İzz el-Hanefî", "İmam Nevevî", "İbn Kesîr", "İbn Hacer"]
+                    ar: ["المستقيم والدائم", "القديم", "المتغير", "الصعب"],
+                    ckb: ["ڕاست و دروست", "کۆن", "دەستکاری کراو", "سەخت"],
+                    en: ["The Straight and Righteous", "Ancient", "Changing", "Difficult"],
+                    fa: ["مستقیم و استوار", "قدیمی", "متغیر", "سخت"],
+                    tr: ["Dosdoğru", "Eski", "Değişken", "Zor"]
                 },
-                correctIndex: 0,
-                exp: {
-                    ckb: "بەپێی ویکیپیدیا، ئەم هۆنراوەیە لەلایەن ئیمام (ابن أبي العز الحنفي) دروستکراوە کە پێکهاتووە لە ١٠٠ دێڕە شێعر لەسەر کێشی (الرجز).",
-                    ar: "وفقاً لويكيبيديا، هذه المنظومة من تأليف الإمام ابن أبي العز الحنفي وتتكون من 100 بيت في السيرة النبوية.",
-                    en: "According to Wikipedia, this poem was composed by Imam Ibn Abi al-Izz al-Hanafi, consisting of 100 lines summarizing the Seerah.",
-                    fa: "طبق اطلاعات ویکی‌پدیای فارسی، این منظومه توسط ابن ابی العز الحنفی در ۱۰۰ بیت برای خلاصه‌سازی سیره نبوی سروده شده است.",
-                    tr: "Vikipedi'ye göre bu manzume, İbn Ebî'l-İzz el-Hanefî tarafından Siyer-i Nebî'yi özetleyen 100 beyit halinde kaleme alınmıştır."
-                },
-                wikiQuery: "ابن أبي العز الحنفي الأرجوزة المئية"
+                correct: 0,
+                wikiTitle: "Sirat_al-Mustaqim",
+                wikiInfo: "Sirat al-Mustaqim is an Arabic term meaning 'the Straight Path' or 'the Right Way', frequently used in Islamic scriptures."
             },
-            { 
-                q: {
-                    ckb: "پێغەمبەر (د.خ) لە چ ساڵێکدا لەدایکبووە بەپێی هۆنراوەکە؟",
-                    ar: "في أي عام ولد النبي ﷺ وفقاً للأرجوزة؟",
-                    en: "In which year was the Prophet ﷺ born according to the poem?",
-                    fa: "پیامبر (ص) طبق این منظومه در چه سالی متولد شد؟",
-                    tr: "Manzumeye göre Hz. Muhammed (s.a.v.) hangi yılda doğmuştur?"
-                },
+            {
+                q: "ما معنى كلمة 'اجْتَبَانَا' في البيت الأول؟",
                 opts: {
-                    ckb: ["ساڵی فیل (عام الفيل)", "ساڵی حزن", "ساڵی فەتح", "ساڵی کۆچی"],
-                    ar: ["عام الفيل", "عام الحزن", "عام الفتح", "عام الهجرة"],
-                    en: ["Year of the Elephant", "Year of Sorrow", "Year of Conquest", "Year of Hijra"],
-                    fa: ["عام الفیل", "عام الحزن", "عام الفتح", "سال هجرت"],
-                    tr: ["Fil Yılı", "Hüzün Yılı", "Fetih Yılı", "Hicret Yılı"]
+                    ar: ["اخْتَارَنَا واصْطَفَانَا", "تَرَكَنَا", "عَاقَبَنَا", "حَاسَبَنَا"],
+                    ckb: ["هەڵبژاردووین و هەڵیبژاردوین", "جێی هێشتوین", "سزای داوین", "پێشنوێژی کردوین"],
+                    en: ["Chosen and selected us", "Left us", "Punished us", "Judged us"],
+                    fa: ["ما را برگزید", "رها کرد", "مجازات کرد", "محاسبه کرد"],
+                    tr: ["Bizi seçti", "Bıraktı", "Cezalandırdı", "Sorguladı"]
                 },
-                correctIndex: 0,
-                exp: {
-                    ckb: "شاعیر دەڵێت: (مَوْلِدُهُ فِي عَامِ الْفِيلِ زَكَا)، واتە لە ساڵی فیلدا لەدایکبووە (٥٧١ زیلاینی).",
-                    ar: "يقول الناظم: (مَوْلِدُهُ فِي عَامِ الْفِيلِ زَكَا)، حيث ولد النبي في عام الفيل (571م).",
-                    en: "The poet says: 'His birth was in the Year of the Elephant' (571 CE).",
-                    fa: "شاعر می‌گوید: (مَوْلِدُهُ فِي عَامِ الْفِيلِ زَكَا)، یعنی ولادت ایشان در عام الفیل (۵۷۱ میلادی) بوده است.",
-                    tr: "Şair şöyle der: 'Mevliduhu fî âmil-fîli zekâ', yani Hz. Peygamber Fil Yılı'nda (M. 571) dünyaya gelmiştir."
-                },
-                wikiQuery: "مولد النبي عام الفيل"
-            },
-            { 
-                q: {
-                    ckb: "پێغەمبەر (د.خ) لە چ تەمەنێکدا دایکی کۆچی دوایی کرد؟",
-                    ar: "کم كان عمر النبي ﷺ عند وفاة أمه؟",
-                    en: "How old was the Prophet ﷺ when his mother passed away?",
-                    fa: "پیامبر (ص) در چند سالگی مادر گرامی‌شان را از دست دادند؟",
-                    tr: "Annesi vefat ettiğinde Hz. Peygamber (s.a.v.) kaç yaşındaydı?"
-                },
-                opts: {
-                    ckb: ["٦ ساڵی", "٨ ساڵی", "٤ ساڵی", "١٢ ساڵی"],
-                    ar: ["6 سنوات", "8 سنوات", "4 سنوات", "12 سنة"],
-                    en: ["6 years old", "8 years old", "4 years old", "12 years old"],
-                    fa: ["۶ سالگی", "۸ سالگی", "۴ سالگی", "۱۲ سالگی"],
-                    tr: ["6 yaşında", "8 yaşında", "4 yaşında", "12 yaşında"]
-                },
-                correctIndex: 0,
-                exp: {
-                    ckb: "لە هۆنراوەکەدا هاتووە: (وَبَعْدَ سِتٍّ مَاتَتِ الأُمُّ الرَّؤُوفُ)، واتە لە دوای تەمەنی ٦ ساڵی دایکی کۆچی دوایی کرد.",
-                    ar: "ورد في البيت: (وَبَعْدَ سِتٍّ مَاتَتِ الأُمُّ الرَّؤُوفُ)، أي توفيت أمه آمنة وعمره 6 سنوات.",
-                    en: "The poem states: 'And after six years, the compassionate mother passed away'.",
-                    fa: "در شعر آمده است: (وَبَعْدَ سِتٍّ مَاتَتِ الأُمُّ الرَّؤُوفُ)، یعنی در ۶ سالگی مادر مهربانشان آمنه درگذشت.",
-                    tr: "Şiirde belirtildiği üzere: 'Ve ba'de sittin mâteti'l-ummur-raûf', yani 6 yaşındayken şefkatli annesi Âmine vefat etmiştir."
-                },
-                wikiQuery: "وفاة آمنة بنت وهب أم النبي"
-            },
-            { 
-                q: {
-                    ckb: "پێغەمبەر (د.خ) چەند ساڵ بە نهێنی بانگەوازی کرد؟",
-                    ar: "کم سنة استمرت الدعوة السريّة؟",
-                    en: "How many years did the secret Dawah last?",
-                    fa: "دعوت مخفیانه اسلام چند سال طول کشید؟",
-                    tr: "Gizli davet dönemi kaç yıl sürmüştür?"
-                },
-                opts: {
-                    ckb: ["٣ ساڵ", "٥ ساڵ", "٧ ساڵ", "١٠ ساڵ"],
-                    ar: ["3 سنوات", "5 سنوات", "7 سنوات", "10 سنوات"],
-                    en: ["3 years", "5 years", "7 years", "10 years"],
-                    fa: ["۳ سال", "۵ سال", "۷ سال", "۱۰ سال"],
-                    tr: ["3 yıl", "5 yıl", "7 yıl", "10 yıl"]
-                },
-                correctIndex: 0,
-                exp: {
-                    ckb: "بەپێی ویکیپیدیا، بانگەوازی ئیسلام ٣ ساڵی یەکەم بە نهێنی بوو (ثُمَّ دَعَا ثَلَاثَ سِنِينَ سِرَّا).",
-                    ar: "استمرت الدعوة السرية في مكة المكرمة لمدة ثلاث سنوات كما ذكر الناظم (ثُمَّ دَعَا ثَلَاثَ سِنِينَ سِرَّا).",
-                    en: "The secret call to Islam lasted for 3 years before going public.",
-                    fa: "طبق منابع تاریخی، دعوت پنهانی در مکه ۳ سال به طول انجامید (ثُمَّ دَعَا ثَلَاثَ سِنِينَ سِرَّا).",
-                    tr: "Tarihi kaynaklara göre Mekke'deki gizli davet 3 yıl sürmüştür (Şair: 'Summe deâ selâse sinîne sirrâ')."
-                },
-                wikiQuery: "الدعوة السرية في الإسلام"
+                correct: 0,
+                wikiTitle: "Election_(theology)",
+                wikiInfo: "In Islamic context, divine choice (Isstifa/Ijtiba) refers to Allah selecting individuals or communities for guidance and prophet leadership."
             }
         ];
 
-        let selectedQLang = "ckb";
-        let selectedExpLang = "ckb";
-        let activeQuestions = [];
-        let currentQuestionIndex = 0;
-        let score = 0;
+        const arjuzahMeaningData = [
+            {
+                q: "من هو كافل النبي ﷺ بعد وفاة جده عبد المطلب كما جاء في الأرجوزة السنية؟",
+                opts: {
+                    ar: ["عمه أبو طالب", "عمه العباس", "أبو بكر الصديق", "عمه حمزة"],
+                    ckb: ["مامی ئەبو تالیب", "مامی عەبباس", "ئەبو بەکری صدیق", "مامی حەمزە"],
+                    en: ["His uncle Abu Talib", "His uncle Al-Abbas", "Abu Bakr", "His uncle Hamzah"],
+                    fa: ["عمویش ابو طالب", "عمویش عباس", "ابوبکر صدیق", "عمویش حمزه"],
+                    tr: ["Amcası Ebu Talib", "Amcası Abbas", "Ebu Bekir", "Amcası Hamza"]
+                },
+                correct: 0,
+                wikiTitle: "Abu_Talib_ibn_Abd_al-Muttalib",
+                wikiInfo: "Abu Talib was the leader of Banu Hashim and the uncle of Prophet Muhammad. He raised Muhammad after his grandfather's death and protected him."
+            },
+            {
+                q: "كم كان عمر النبي ﷺ حين توفيت أمه آمنة بنت وهب؟",
+                opts: {
+                    ar: ["ست سنين", "أربع سنين", "ثماني سنين", "عشر سنين"],
+                    ckb: ["شەش ساڵ (ست سنين)", "چوار ساڵ", "هەشت ساڵ", "دە ساڵ"],
+                    en: ["6 years old", "4 years old", "8 years old", "10 years old"],
+                    fa: ["۶ سالگی", "۴ سالگی", "۸ سالگی", "۱۰ سالگی"],
+                    tr: ["6 yaşında", "4 yaşında", "8 yaşında", "10 yaşında"]
+                },
+                correct: 0,
+                wikiTitle: "Aminah_bint_Wahb",
+                wikiInfo: "Aminah bint Wahb was the mother of Prophet Muhammad. She passed away at Al-Abwa when Muhammad was six years old."
+            }
+        ];
 
-        function updateUI() {
-            selectedQLang = document.getElementById('q-lang-select').value;
-            selectedExpLang = document.getElementById('exp-lang-select').value;
-            const t = translations[selectedQLang];
+        let state = {
+            currentTab: 'home',
+            currentLessonId: 101,
+            lessonMode: 'student',
+            userProgress: JSON.parse(localStorage.getItem('seerah_progress')) || {},
+            userBookmarks: JSON.parse(localStorage.getItem('seerah_bookmarks')) || [],
+            userNotes: JSON.parse(localStorage.getItem('seerah_notes')) || {},
+            theme: localStorage.getItem('seerah_theme') || 'light',
+            quizLeaderboard: JSON.parse(localStorage.getItem('seerah_leaderboard')) || []
+        };
 
-            document.getElementById('html-tag').dir = t.dir;
-            document.getElementById('ui-header-title').innerText = t.title;
-            document.getElementById('ui-header-sub').innerText = t.sub;
-            document.getElementById('ui-welcome-title').innerText = t.welcomeTitle;
-            document.getElementById('ui-welcome-desc').innerText = t.welcomeDesc;
-            document.getElementById('ui-lbl-q-lang').innerText = t.lblQLang;
-            document.getElementById('ui-lbl-exp-lang').innerText = t.lblExpLang;
-            document.getElementById('ui-lbl-count').innerText = t.lblCount;
-            document.getElementById('ui-btn-start').innerText = t.btnStart;
-            document.getElementById('ui-btn-poem').innerText = t.btnPoem;
-            document.getElementById('ui-exp-title').innerText = translations[selectedExpLang].expTitle;
-            document.getElementById('next-btn').innerText = t.btnNext;
-            document.getElementById('ui-result-title').innerText = t.resTitle;
-            document.getElementById('ui-result-desc').innerText = t.resDesc;
-            document.getElementById('ui-btn-restart').innerText = t.btnRestart;
-            document.getElementById('ui-btn-home').innerText = t.btnHome;
-            document.getElementById('ui-btn-close-modal').innerText = t.btnCloseModal;
-            document.getElementById('ui-footer').innerText = t.footer;
-            document.getElementById('wiki-google-link').innerText = t.btnWikiGoogle;
+        function saveState() {
+            localStorage.setItem('seerah_progress', JSON.stringify(state.userProgress));
+            localStorage.setItem('seerah_bookmarks', JSON.stringify(state.userBookmarks));
+            localStorage.setItem('seerah_notes', JSON.stringify(state.userNotes));
+            localStorage.setItem('seerah_theme', state.theme);
+            localStorage.setItem('seerah_leaderboard', JSON.stringify(state.quizLeaderboard));
         }
 
-        document.getElementById('q-lang-select').addEventListener('change', updateUI);
-        document.getElementById('exp-lang-select').addEventListener('change', updateUI);
+        document.addEventListener("DOMContentLoaded", () => {
+            applyTheme();
+            renderRoadmap();
+            renderTimeline();
+            renderPeople();
+            renderLesson(state.currentLessonId);
+            updateOverallProgress();
+            renderNotesHub();
+            renderLeaderboard();
+            setupKeyboardShortcuts();
+        });
 
-        function startQuiz() {
-            updateUI();
-            const count = parseInt(document.getElementById('question-count-select').value);
+        // --- KEYBOARD SHORTCUTS & MODAL HANDLER ---
+        function openShortcutGuide() {
+            document.getElementById('shortcutModal').classList.add('active');
+        }
+
+        function closeShortcutGuide() {
+            document.getElementById('shortcutModal').classList.remove('active');
+        }
+
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                const activeTag = document.activeElement.tagName.toLowerCase();
+                if (activeTag === 'input' || activeTag === 'textarea') return;
+
+                if (e.key === 'Escape') {
+                    closeShortcutGuide();
+                    return;
+                }
+
+                if (e.ctrlKey || e.metaKey) {
+                    const key = e.key.toLowerCase();
+                    let handled = true;
+
+                    switch (key) {
+                        case 'h': switchTab('home'); break;
+                        case 'l': switchTab('roadmap'); break;
+                        case 'e': switchTab('lesson'); break;
+                        case 'q': switchTab('arjuzah'); break;
+                        case 'd': switchTab('timeline'); break;
+                        case 'p': switchTab('people'); break;
+                        default: handled = false; break;
+                    }
+
+                    if (handled) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+
+        function switchTab(tabId) {
+            state.currentTab = tabId;
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
             
-            activeQuestions = [];
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+                btn.getAttribute('onclick').includes(`'${tabId}'`)
+            );
+            if (activeBtn) activeBtn.classList.add('active');
+
+            if (tabId === 'notes') renderNotesHub();
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+            applyTheme();
+            saveState();
+        }
+
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', state.theme);
+        }
+
+        function renderRoadmap() {
+            const grid = document.getElementById('roadmapGrid');
+            grid.innerHTML = '';
+
+            seerahData.levels.forEach(level => {
+                const levelLessons = seerahData.lessons.filter(l => l.levelId === level.id);
+                const card = document.createElement('div');
+                card.className = 'card level-card';
+                
+                let lessonsHtml = levelLessons.length > 0 
+                    ? levelLessons.map(l => {
+                        const status = state.userProgress[l.id] || 'Not Started';
+                        return `<div style="margin-top:0.8rem; display:flex; justify-content:space-between; align-items:center;">
+                            <a href="#" onclick="openLesson(${l.id})" style="color:var(--primary-emerald); font-weight:600; text-decoration:none;">${l.title}</a>
+                            <span class="badge" style="background:var(--border-color);">${status}</span>
+                        </div>`;
+                      }).join('')
+                    : `<p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.5rem;">Lessons launching soon.</p>`;
+
+                card.innerHTML = `
+                    <h3>${level.name}</h3>
+                    <p style="font-size:0.9rem; color:var(--text-muted); margin-top:0.3rem;">${level.desc}</p>
+                    <div style="margin-top:1rem; border-top:1px solid var(--border-color); padding-top:0.5rem;">
+                        ${lessonsHtml}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openLesson(lessonId) {
+            state.currentLessonId = lessonId;
+            renderLesson(lessonId);
+            switchTab('lesson');
+        }
+
+        function continueLearning() {
+            openLesson(state.currentLessonId);
+        }
+
+        function setLessonMode(mode) {
+            state.lessonMode = mode;
+            document.getElementById('studentModeBtn').classList.toggle('active', mode === 'student');
+            document.getElementById('teacherModeBtn').classList.toggle('active', mode === 'teacher');
+            renderLesson(state.currentLessonId);
+        }
+
+        function renderLesson(lessonId) {
+            const lesson = seerahData.lessons.find(l => l.id === lessonId) || seerahData.lessons[0];
+            const container = document.getElementById('lessonContentContainer');
+
+            document.getElementById('statusSelect').value = state.userProgress[lesson.id] || 'Not Started';
+            document.getElementById('bookmarkIcon').innerText = state.userBookmarks.includes(lesson.id) ? '⭐' : '☆';
+            document.getElementById('lessonNotesArea').value = state.userNotes[lesson.id] || '';
+
+            if (state.lessonMode === 'student') {
+                container.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h2>${lesson.title}</h2>
+                        <span class="badge badge-authentic">${lesson.authenticity}</span>
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <h4>Explanation</h4>
+                        <p>${lesson.simpleExplanation}</p>
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin:1rem 0;">
+                        <div style="background:var(--bg-primary); padding:0.8rem; border-radius:8px;">
+                            <strong>👥 Key People:</strong> ${lesson.people.join(', ')}
+                        </div>
+                        <div style="background:var(--bg-primary); padding:0.8rem; border-radius:8px;">
+                            <strong>📅 Time:</strong> ${lesson.dates}
+                        </div>
+                    </div>
+                    ${lesson.quranRef ? `<div style="background:var(--gold-light); padding:0.8rem; border-radius:8px; margin:0.8rem 0;"><strong>📖 Qur'an:</strong><br>${lesson.quranRef}</div>` : ''}
+                    ${lesson.hadithRef ? `<div style="background:var(--primary-light); padding:0.8rem; border-radius:8px; margin:0.8rem 0;"><strong>📜 Hadith:</strong><br>${lesson.hadithRef}</div>` : ''}
+                `;
+            } else {
+                const tm = lesson.teacherMode;
+                container.innerHTML = `
+                    <h2>🎓 Teacher Mode: ${lesson.title}</h2>
+                    <div style="margin:1rem 0; background:var(--primary-light); padding:1rem; border-radius:8px;">
+                        <h4>🎯 Key Points to Teach</h4>
+                        <ul>${tm.keyPoints.map(kp => `<li>${kp}</li>`).join('')}</ul>
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1rem; margin:1rem 0;">
+                        <div class="card" style="margin:0;"><h4>👧 Kids Version</h4><p>"${tm.childVer}"</p></div>
+                        <div class="card" style="margin:0;"><h4>🧑 Teenagers Version</h4><p>"${tm.teenVer}"</p></div>
+                    </div>
+                    <div style="background:#fee2e2; color:#991b1b; padding:0.8rem; border-radius:8px; margin:0.8rem 0;">
+                        <strong>⚠️ Common Mistakes:</strong> ${tm.mistakesToAvoid}
+                    </div>
+                `;
+            }
+            renderQuiz(lesson);
+        }
+
+        function renderQuiz(lesson) {
+            const quizContainer = document.getElementById('quizContainer');
+            if (!lesson.quiz) {
+                quizContainer.innerHTML = '<p style="color:var(--text-muted);">No quiz available for this lesson.</p>';
+                return;
+            }
+            
+            const q = lesson.quiz;
+            quizContainer.innerHTML = `
+                <p><strong>${q.question}</strong></p>
+                <div>
+                    ${q.options.map((opt, idx) => `
+                        <button class="quiz-option" onclick="checkAnswer(${idx}, ${q.correct}, '${q.explanation.replace(/'/g, "\\'")}', '${q.wikiTitle || ''}', '${(q.wikiInfo || '').replace(/'/g, "\\'")}')">${opt}</button>
+                    `).join('')}
+                </div>
+                <div id="quizResult" style="margin-top:1rem; display:none; padding:0.8rem; border-radius:8px;"></div>
+            `;
+        }
+
+        function checkAnswer(selected, correct, explanation, wikiTitle, wikiInfo) {
+            const res = document.getElementById('quizResult');
+            res.style.display = 'block';
+            if (selected === correct) {
+                res.style.background = '#dcfce7';
+                res.style.color = '#166534';
+                res.innerHTML = `<strong>✅ Correct!</strong> ${explanation}`;
+            } else {
+                res.style.background = '#fee2e2';
+                res.style.color = '#991b1b';
+                
+                let wikiSection = '';
+                if (wikiTitle && wikiInfo) {
+                    const wikiUrl = `https://en.wikipedia.org/wiki/${wikiTitle}`;
+                    wikiSection = `
+                        <div class="wiki-box">
+                            <h4 style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
+                                <span>🌐 Wikipedia Learn-More:</span> ${wikiTitle.replace(/_/g, ' ')}
+                            </h4>
+                            <p style="font-size:0.9rem; margin-bottom:0.6rem;">${wikiInfo}</p>
+                            <a href="${wikiUrl}" target="_blank" class="btn btn-wiki">Read Full Article on Wikipedia ↗</a>
+                        </div>
+                    `;
+                }
+
+                res.innerHTML = `
+                    <strong>❌ Incorrect!</strong> ${explanation}
+                    ${wikiSection}
+                `;
+            }
+        }
+
+        let currentActiveQuizData = [];
+        let currentParticipantName = "";
+        let quizScore = 0;
+        let currentQuizTypeName = "";
+
+        function startArjuzahQuiz() {
+            const nameInput = document.getElementById('participantName').value.trim();
+            if (!nameInput) {
+                alert('تکایە پێش دەستپێکردنی کویزەکە ناوی تەواوت بنووسە!');
+                document.getElementById('participantName').focus();
+                return;
+            }
+
+            currentParticipantName = nameInput;
+            quizScore = 0;
+
+            const type = document.getElementById('arjQuizType').value;
+            currentQuizTypeName = type === 'vocab' ? 'مانای وشەکان' : 'مانا و تێگەیشتن';
+            const count = parseInt(document.getElementById('arjQuizCount').value);
+            const lang = document.getElementById('arjQuizLang').value;
+            const quizContainer = document.getElementById('arjuzahQuizContainer');
+
+            const sourceData = type === 'vocab' ? arjuzahVocabData : arjuzahMeaningData;
+            
+            currentActiveQuizData = [];
             for (let i = 0; i < count; i++) {
-                const baseQ = poemQuestions[i % poemQuestions.length];
-                activeQuestions.push({
-                    question: baseQ.q[selectedQLang] || baseQ.q['ckb'],
-                    options: baseQ.opts[selectedQLang] || baseQ.opts['ckb'],
-                    correctIndex: baseQ.correctIndex,
-                    explanation: baseQ.exp[selectedExpLang] || baseQ.exp['ckb'],
-                    wikiQuery: baseQ.wikiQuery
+                let base = sourceData[i % sourceData.length];
+                currentActiveQuizData.push({
+                    id: i + 1,
+                    q: `[Q${i + 1}] ${base.q}`,
+                    opts: base.opts[lang] || base.opts['ckb'],
+                    correct: base.correct,
+                    wikiTitle: base.wikiTitle,
+                    wikiInfo: base.wikiInfo,
+                    answered: false
                 });
             }
 
-            currentQuestionIndex = 0;
-            score = 0;
-            document.getElementById('welcome-card').classList.add('hidden');
-            document.getElementById('result-card').classList.add('hidden');
-            document.getElementById('quiz-card').classList.remove('hidden');
-            showQuestion();
+            quizContainer.style.display = 'block';
+            quizContainer.innerHTML = `
+                <div class="quiz-user-banner">
+                    <span>👤 بەشداربوو: ${currentParticipantName}</span>
+                    <span id="quizScoreTracker">نمرە: 0 / ${count}</span>
+                </div>
+                <h3>📝 کویز لەسەر الأرجوزة السنية (${count} پرسیار)</h3>
+                <div id="arjQuestionsArea"></div>
+            `;
+
+            const area = document.getElementById('arjQuestionsArea');
+            area.innerHTML = currentActiveQuizData.map((item, idx) => `
+                <div style="margin: 1.5rem 0; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+                    <p><strong>${item.q}</strong></p>
+                    ${item.opts.map((opt, oIdx) => `
+                        <button class="quiz-option" id="btn_${idx}_${oIdx}" onclick="checkArjAnswer(${idx}, ${oIdx})">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                    <div id="arjRes_${idx}" style="margin-top:0.5rem; display:none; padding:0.5rem; border-radius:6px;"></div>
+                </div>
+            `).join('');
         }
 
-        function showQuestion() {
-            const q = activeQuestions[currentQuestionIndex];
-            const t = translations[selectedQLang];
-
-            document.getElementById('question-text').innerText = q.question;
-            document.getElementById('question-tracker').innerText = `${t.qTracker} ${currentQuestionIndex + 1} / ${activeQuestions.length}`;
-            document.getElementById('score-tracker').innerText = `${t.scoreTracker}: ${score}`;
+        function checkArjAnswer(qIdx, selected) {
+            const item = currentActiveQuizData[qIdx];
+            if (item.answered) return;
             
-            const progress = ((currentQuestionIndex + 1) / activeQuestions.length) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
+            item.answered = true;
+            const res = document.getElementById(`arjRes_${qIdx}`);
+            res.style.display = 'block';
 
-            document.getElementById('feedback').classList.add('hidden');
-            document.getElementById('explanation-box').classList.add('hidden');
-            document.getElementById('wiki-google-btn-container').classList.add('hidden');
-            document.getElementById('next-btn').classList.add('hidden');
+            item.opts.forEach((_, oIdx) => {
+                const btn = document.getElementById(`btn_${qIdx}_${oIdx}`);
+                if (btn) btn.style.pointerEvents = 'none';
+            });
 
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
+            if (selected === item.correct) {
+                quizScore++;
+                res.style.background = '#dcfce7';
+                res.style.color = '#166534';
+                res.innerText = `✅ وەڵامەکەت ڕاستە، ئەفەرین ${currentParticipantName}! (Correct)`;
+            } else {
+                res.style.background = '#fee2e2';
+                res.style.color = '#991b1b';
 
-            q.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "option-btn";
-                
-                if(selectedQLang === 'en' || selectedQLang === 'tr') {
-                    btn.style.textAlign = 'left';
-                } else {
-                    btn.style.textAlign = 'right';
+                let wikiSection = '';
+                if (item.wikiTitle && item.wikiInfo) {
+                    const wikiUrl = `https://en.wikipedia.org/wiki/${item.wikiTitle}`;
+                    wikiSection = `
+                        <div class="wiki-box">
+                            <h4 style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
+                                <span>🌐 زانیاری زیاتر لە Wikipedia:</span> ${item.wikiTitle.replace(/_/g, ' ')}
+                            </h4>
+                            <p style="font-size:0.9rem; margin-bottom:0.6rem;">${item.wikiInfo}</p>
+                            <a href="${wikiUrl}" target="_blank" class="btn btn-wiki">ڕاستەوخۆ بڕۆ بۆ Wikipedia ↗</a>
+                        </div>
+                    `;
                 }
 
-                btn.onclick = () => selectAnswer(idx);
-                btn.innerHTML = `<span>${opt}</span><span style="width:1rem; height:1rem; border-radius:50%; border:1px solid #64748b; display:inline-block;"></span>`;
-                optionsContainer.appendChild(btn);
-            });
-        }
-
-        function selectAnswer(selectedIndex) {
-            const q = activeQuestions[currentQuestionIndex];
-            const t = translations[selectedQLang];
-            const optionsBtns = document.getElementById('options-container').children;
-            const feedback = document.getElementById('feedback');
-            const expBox = document.getElementById('explanation-box');
-            const expText = document.getElementById('explanation-text');
-            const wikiGoogleContainer = document.getElementById('wiki-google-btn-container');
-            const wikiGoogleLink = document.getElementById('wiki-google-link');
-
-            for (let btn of optionsBtns) {
-                btn.disabled = true;
-            }
-
-            if (selectedIndex === q.correctIndex) {
-                score++;
-                optionsBtns[selectedIndex].classList.add('correct');
-                feedback.className = "feedback-box feedback-correct";
-                feedback.innerText = t.correctMsg;
-                wikiGoogleContainer.classList.add('hidden');
-            } else {
-                optionsBtns[selectedIndex].classList.add('wrong');
-                optionsBtns[q.correctIndex].classList.add('correct');
-                feedback.className = "feedback-box feedback-wrong";
-                feedback.innerText = `${t.wrongMsg} ${q.options[q.correctIndex]}`;
-
-                const siteLang = selectedExpLang === 'all' ? '' : selectedExpLang + '.';
-                const googleWikiUrl = `https://www.google.com/search?q=${encodeURIComponent('site:' + siteLang + 'wikipedia.org ' + q.wikiQuery)}`;
-                wikiGoogleLink.href = googleWikiUrl;
-                wikiGoogleContainer.classList.remove('hidden');
-            }
-
-            expText.innerText = q.explanation;
-            expBox.classList.remove('hidden');
-
-            document.getElementById('score-tracker').innerText = `${t.scoreTracker}: ${score}`;
-            feedback.classList.remove('hidden');
-            document.getElementById('next-btn').classList.remove('hidden');
-        }
-
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < activeQuestions.length) {
-                showQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        function showResults() {
-            document.getElementById('quiz-card').classList.add('hidden');
-            document.getElementById('result-card').classList.remove('hidden');
-
-            const percentage = Math.round((score / activeQuestions.length) * 100);
-            document.getElementById('final-score').innerText = `${score} / ${activeQuestions.length}`;
-            document.getElementById('result-percentage').innerText = `${percentage}%`;
-
-            const emoji = document.getElementById('result-emoji');
-            if (percentage >= 80) emoji.innerText = "🏆";
-            else if (percentage >= 50) emoji.innerText = "👏";
-            else emoji.innerText = "📚";
-        }
-
-        function restartQuiz() {
-            startQuiz();
-        }
-
-        function goHome() {
-            document.getElementById('result-card').classList.add('hidden');
-            document.getElementById('quiz-card').classList.add('hidden');
-            document.getElementById('welcome-card').classList.remove('hidden');
-        }
-
-        function showPoemModal() {
-            const container = document.getElementById('poem-content');
-            container.innerHTML = '';
-            poemLines.forEach((line, index) => {
-                const lineDiv = document.createElement('div');
-                lineDiv.className = 'poem-line';
-                lineDiv.innerHTML = `
-                    <span style="font-size:0.75rem; color:#64748b;">${index + 1}</span>
-                    <span class="poem-part" style="color:#f59e0b; font-weight:bold;">${line[0]}</span>
-                    <span class="poem-part" style="color:#cbd5e1;">${line[1]}</span>
+                res.innerHTML = `
+                    ❌ هەڵەیە، وەڵامی ڕاست و زانیاری زیاتر ببینە: (Incorrect)
+                    ${wikiSection}
                 `;
-                container.appendChild(lineDiv);
-            });
-            document.getElementById('poem-modal').classList.remove('hidden');
+            }
+
+            // نوێکردنەوەی نمرەی بەشداربوو
+            const totalCount = currentActiveQuizData.length;
+            const tracker = document.getElementById('quizScoreTracker');
+            if (tracker) {
+                tracker.innerText = `نمرەی ${currentParticipantName}: ${quizScore} / ${totalCount}`;
+            }
+
+            // تۆمارکردنی ئەنجامەکە لە لیستی مامۆستا ئەگەر هەموو پرسیارەکان وەڵام درابنەوە
+            const allAnswered = currentActiveQuizData.every(q => q.answered);
+            if (allAnswered) {
+                saveLeaderboardEntry(currentParticipantName, quizScore, totalCount, currentQuizTypeName);
+            }
         }
 
-        function closePoemModal() {
-            document.getElementById('poem-modal').classList.add('hidden');
+        // --- TEACHER DASHBOARD & LEADERBOARD FUNCTIONS ---
+        function saveLeaderboardEntry(name, score, total, type) {
+            const dateStr = new Date().toLocaleString('en-US', { hour12: true });
+            const entry = {
+                id: Date.now(),
+                name: name,
+                score: `${score} / ${total}`,
+                type: type,
+                date: dateStr
+            };
+
+            // پاشەکەوتکردن لە لیستدا
+            state.quizLeaderboard.unshift(entry);
+            saveState();
+            renderLeaderboard();
         }
 
-        // Initial setup
-        updateUI();
+        function renderLeaderboard() {
+            const tbody = document.getElementById('leaderboardBody');
+            if (!tbody) return;
+
+            if (state.quizLeaderboard.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">هیچ ئەنجامێک تا ئێستا تۆمار نەکراوە.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = state.quizLeaderboard.map((item, index) => `
+                <tr>
+                    <td><b>${index + 1}</b></td>
+                    <td><b>${item.name}</b></td>
+                    <td><span class="badge" style="background:var(--primary-light); color:var(--primary-emerald);">${item.score}</span></td>
+                    <td>${item.type}</td>
+                    <td style="font-size:0.85rem; color:var(--text-muted);">${item.date}</td>
+                </tr>
+            `).join('');
+        }
+
+        function clearLeaderboard() {
+            if (confirm('ئایا دڵنیایت لە سڕینەوەی تەواوی لیستی بەشداربووان؟')) {
+                state.quizLeaderboard = [];
+                saveState();
+                renderLeaderboard();
+            }
+        }
+
+        function updateLessonStatus(status) {
+            state.userProgress[state.currentLessonId] = status;
+            saveState();
+            updateOverallProgress();
+            renderRoadmap();
+        }
+
+        function toggleBookmark() {
+            const id = state.currentLessonId;
+            if (state.userBookmarks.includes(id)) {
+                state.userBookmarks = state.userBookmarks.filter(b => b !== id);
+            } else {
+                state.userBookmarks.push(id);
+            }
+            saveState();
+            renderLesson(id);
+        }
+
+        function saveLessonNote() {
+            const noteText = document.getElementById('lessonNotesArea').value;
+            state.userNotes[state.currentLessonId] = noteText;
+            saveState();
+            alert('Note saved successfully!');
+        }
+
+        function updateOverallProgress() {
+            const total = seerahData.levels.length;
+            const completed = Object.values(state.userProgress).filter(s => s === 'Completed').length;
+            const percentage = Math.round((completed / total) * 100);
+
+            document.getElementById('overallProgressBar').style.width = percentage + '%';
+            document.getElementById('overallProgressText').innerText = `${percentage}% Completed (${completed} of ${total} Levels)`;
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            container.innerHTML = seerahData.timelineList.map(t => `
+                <div class="timeline-item">
+                    <span class="timeline-badge">${t.year}</span>
+                    <h3 class="timeline-section-title">${t.title}</h3>
+                    <p style="font-size: 1.05rem; line-height:1.7;"><strong>کورتەی ڕووداو:</strong> ${t.desc}</p>
+                    
+                    ${t.details && t.details.length > 0 ? `
+                        <div class="timeline-detail-box">
+                            <strong>📌 وردەکارییە هەستیار و بەردی بناغەییەکان:</strong>
+                            <ul>
+                                ${t.details.map(d => `<li style="margin-bottom:0.4rem;">${d}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderPeople() {
+            const grid = document.getElementById('peopleGrid');
+            grid.innerHTML = seerahData.peopleList.map(p => `
+                <div class="card">
+                    <h3>${p.name}</h3>
+                    <span class="badge" style="background:var(--primary-light); color:var(--primary-emerald);">${p.role}</span>
+                    <p style="margin-top:0.5rem; font-size:0.9rem; color:var(--text-muted);">${p.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderNotesHub() {
+            const bList = document.getElementById('bookmarkedList');
+            bList.innerHTML = state.userBookmarks.length 
+                ? state.userBookmarks.map(id => {
+                    const l = seerahData.lessons.find(item => item.id === id);
+                    return `<li><a href="#" onclick="openLesson(${id})" style="color:var(--primary-emerald);">${l ? l.title : 'Lesson ' + id}</a></li>`;
+                  }).join('')
+                : '<li>No bookmarks added yet.</li>';
+
+            const nContainer = document.getElementById('savedNotesContainer');
+            const notesKeys = Object.keys(state.userNotes).filter(k => state.userNotes[k].trim() !== '');
+            nContainer.innerHTML = notesKeys.length
+                ? notesKeys.map(k => {
+                    const l = seerahData.lessons.find(item => item.id == k);
+                    return `<div style="margin-bottom:0.8rem;">
+                        <strong>${l ? l.title : 'Lesson ' + k}:</strong>
+                        <p style="background:var(--bg-primary); padding:0.5rem; border-radius:6px; margin-top:0.2rem;">${state.userNotes[k]}</p>
+                    </div>`;
+                  }).join('')
+                : '<p style="color:var(--text-muted);">No notes saved yet.</p>';
+        }
+
+        function handleSearch() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            if (!q) return;
+            const match = seerahData.lessons.find(l => l.title.toLowerCase().includes(q) || l.simpleExplanation.toLowerCase().includes(q));
+            if (match) openLesson(match.id);
+        }
     </script>
 </body>
 </html>
