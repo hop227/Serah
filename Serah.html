@@ -32,19 +32,20 @@
         body { background-color: var(--bg-primary); color: var(--text-main); line-height: 1.6; }
         .arabic { font-family: 'Amiri', serif; }
 
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: var(--bg-card); padding: 2.5rem; border-radius: var(--radius); width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); text-align: center; }
+
         header { background-color: var(--bg-card); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
         .nav-container { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; }
         .logo { font-size: 1.3rem; font-weight: 700; color: #065f46; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
         
         .top-right-controls { display: flex; align-items: center; gap: 1rem; }
-        .search-box { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; padding: 0.5rem 1rem; width: 220px; font-size: 0.85rem; }
-        .head-btn { background: var(--bg-primary); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 0.4rem; }
+        .search-box { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; padding: 0.5rem 1rem; width: 220px; font-size: 0.85rem; color: var(--text-main); }
+        .head-btn { background: var(--bg-primary); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 0.4rem; color: var(--text-main); }
 
         .tabs-nav { display: flex; align-items: center; max-width: 1300px; margin: 0 auto; padding: 0.5rem 1.5rem; gap: 0.5rem; border-bottom: 1px solid var(--border-color); overflow-x: auto; }
         .tab-btn { padding: 0.5rem 1rem; border: none; background: none; color: var(--text-muted); cursor: pointer; font-weight: 500; border-radius: 8px; white-space: nowrap; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
         .tab-btn.active { background: #065f46; color: #ffffff; }
-        .shortcut-badge { background: #e2e8f0; color: #475569; font-size: 0.7rem; padding: 0.1rem 0.3rem; border-radius: 4px; }
-        .tab-btn.active .shortcut-badge { background: rgba(255,255,255,0.2); color: #fff; }
 
         main { max-width: 1300px; margin: 1.5rem auto; padding: 0 1.5rem; }
         .page { display: none; }
@@ -53,418 +54,512 @@
         .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); }
         .btn { padding: 0.6rem 1.2rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
         .btn-green { background: #065f46; color: white; }
+        .btn-green:disabled { background: #94a3b8; cursor: not-allowed; }
         .btn-gray { background: #e2e8f0; color: #334155; }
-        .btn-blue { background: #2563eb; color: white; }
 
         .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 0.8rem 0 0.4rem 0; }
-        .progress-fill { height: 100%; background: #065f46; width: 0%; }
+        .progress-fill { height: 100%; background: #065f46; width: 0%; transition: width 0.3s ease; }
 
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; }
         .level-card { border-left: 4px solid #065f46; }
-        .status-badge { background: #e2e8f0; font-size: 0.75rem; font-weight: bold; padding: 0.2rem 0.5rem; border-radius: 4px; }
 
-        .select-control, .input-control { padding: 0.5rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); }
-        .quiz-opt { display: block; width: 100%; text-align: left; padding: 0.8rem; margin-top: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); cursor: pointer; font-size: 0.95rem; transition: background 0.2s; }
-        .quiz-opt:hover { background: var(--primary-light); }
+        .select-control, .input-control { padding: 0.6rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.95rem; }
         
-        .tag-badge { background: #dcfce7; color: #15803d; font-size: 0.7rem; font-weight: bold; padding: 0.2rem 0.5rem; border-radius: 12px; display: inline-block; margin: 0.4rem 0; text-transform: uppercase; }
-        .scene-badge { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.8rem; font-weight: 600; }
-        .scene-badge:hover { background: #fde68a; }
+        .quiz-opt { display: block; width: 100%; text-align: left; padding: 0.8rem 1rem; margin-top: 0.6rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-card); cursor: pointer; font-size: 0.95rem; transition: all 0.2s; color: var(--text-main); }
+        .quiz-opt:hover { background: var(--primary-light); }
+        .quiz-opt.selected { border-color: #065f46; background: var(--primary-light); font-weight: 600; }
+        .quiz-opt.correct { background: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; font-weight: bold; }
+        .quiz-opt.wrong { background: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
 
-        .wiki-alert { display: none; margin-top: 0.8rem; padding: 0.8rem; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; color: #991b1b; font-size: 0.85rem; }
+        .explanation-box { margin-top: 1rem; padding: 1rem; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; color: #92400e; font-size: 0.9rem; display: none; }
+        [data-theme="dark"] .explanation-box { background: #451a03; border-color: #78350f; color: #fde68a; }
+
+        .quiz-step { display: none; }
+        .quiz-step.active { display: block; }
+
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin-top: 1rem; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; }
+        .leaderboard-table th, .leaderboard-table td { padding: 0.6rem; border-bottom: 1px solid var(--border-color); text-align: left; }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2 style="color: #065f46; margin-bottom: 0.5rem;">🕌 Seerah Academy</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">تکایە ناوی خۆت بنووسە بۆ چوونەژوورەوە:</p>
+            <input type="text" id="loginNameInput" class="input-control" style="width: 100%; margin-bottom: 1rem;" placeholder="ناوی خۆت...">
+            <button class="btn btn-green" style="width: 100%; justify-content: center;" onclick="handleLogin()">چوونەژوورەوە 🚀</button>
+        </div>
+    </div>
+
     <header>
         <div class="nav-container">
             <a href="#" class="logo" onclick="switchTab('home')">
-                🕌 Seerah Academy
+                🕌 Seerah Academy <span id="currentUserDisplay" style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted); margin-left: 0.5rem;"></span>
             </a>
             <div class="top-right-controls">
                 <input type="text" class="search-box" placeholder="Search lessons...">
-                <button class="head-btn">⌨️ Shortcuts Guide</button>
                 <button class="head-btn" onclick="toggleTheme()">🌙 Theme</button>
             </div>
         </div>
         <nav class="tabs-nav">
-            <button class="tab-btn active" onclick="switchTab('home')">Home <span class="shortcut-badge">Ctrl+H</span></button>
-            <button class="tab-btn" onclick="switchTab('roadmap')">Learning Roadmap <span class="shortcut-badge">Ctrl+L</span></button>
-            <button class="tab-btn" onclick="switchTab('lessons')">Lessons <span class="shortcut-badge">Ctrl+E</span></button>
-            <button class="tab-btn" onclick="switchTab('arjuzah')">الأرجوزة السنية & Quiz <span class="shortcut-badge">Ctrl+Q</span></button>
-            <button class="tab-btn" onclick="switchTab('movie')">🎬 Movie Quiz</button>
-            <button class="tab-btn" onclick="switchTab('timeline')">Deep Timeline <span class="shortcut-badge">Ctrl+D</span></button>
-            <button class="tab-btn" onclick="switchTab('people')">Important People <span class="shortcut-badge">Ctrl+P</span></button>
-            <button class="tab-btn" onclick="switchTab('notes')">My Notes</button>
+            <button class="tab-btn active" id="tab-home" onclick="switchTab('home')">Home</button>
+            <button class="tab-btn" id="tab-roadmap" onclick="switchTab('roadmap')">Roadmap</button>
+            <button class="tab-btn" id="tab-lessons" onclick="switchTab('lessons')">Lessons</button>
+            <button class="tab-btn" id="tab-arjuzah" onclick="switchTab('arjuzah')">الأرجوزة & Quiz</button>
+            <button class="tab-btn" id="tab-movie" onclick="switchTab('movie')">🎬 Movie Quiz</button>
+            <button class="tab-btn" id="tab-timeline" onclick="switchTab('timeline')">Deep Timeline</button>
+            <button class="tab-btn" id="tab-people" onclick="switchTab('people')">Important People</button>
+            <button class="tab-btn" id="tab-notes" onclick="switchTab('notes')">My Notes</button>
         </nav>
     </header>
 
     <main>
-        <!-- HOME PAGE -->
         <section id="home" class="page active">
             <div class="card" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
-                <h2 style="font-size: 1.5rem;">Welcome to Seerah Academy</h2>
+                <h2 style="font-size: 1.5rem;" id="welcomeTitle">Welcome</h2>
                 <p style="color: var(--text-muted); margin-top: 0.4rem;">
                     <strong>Seerah (سيرة)</strong> refers to the comprehensive study of the life, character, and teachings of Prophet Muhammad ﷺ.
                 </p>
                 <div style="margin-top: 1rem; display: flex; gap: 0.8rem;">
                     <button class="btn btn-green" onclick="switchTab('roadmap')">Start Learning Journey →</button>
-                    <button class="btn btn-gray" onclick="switchTab('lessons')">Continue Last Lesson</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Overall Learning Progress</h3>
-                <div class="progress-bar"><div class="progress-fill"></div></div>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">0% Completed (0 of 9 Levels)</p>
-            </div>
-
-            <div class="card" style="border-left: 4px solid var(--gold-accent, #d97706);">
-                <span style="background: #fef3c7; color: #b45309; font-size: 0.7rem; font-weight: bold; padding: 0.2rem 0.5rem; border-radius: 4px;">DAILY SEERAH REFLECTION</span>
-                <h3 style="margin-top: 0.4rem;">The Character of the Prophet ﷺ</h3>
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1rem;">
-                    <p style="font-style: italic; color: var(--text-muted);">'And indeed, you are of a great moral character.' — (Qur'an 68:4)</p>
-                    <div class="arabic" style="font-size: 1.3rem;">"وَإِنَّكَ لَعَلَىٰ خُلُقٍ عَظِيمٍ"</div>
                 </div>
             </div>
         </section>
 
-        <!-- LEARNING ROADMAP PAGE -->
         <section id="roadmap" class="page">
-            <h2>Learning Roadmap</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Step-by-step learning path.</p>
-            
-            <div class="grid-3">
+            <h2>Learning Roadmap (10 Levels)</h2>
+            <div class="grid-3" style="margin-top: 1rem;">
                 <div class="card level-card">
-                    <h4>Level 1: Seerah Fundamentals</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Understanding the importance and methodology.</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #065f46; font-weight: 600; font-size: 0.85rem;">Lesson 1: What is the Seerah and Why Study It?</span>
-                        <span class="status-badge">NOT STARTED</span>
-                    </div>
+                    <h4>Level 1: Fundamentals</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">گرنگی و پێناسەی سیرە.</p>
                 </div>
-
                 <div class="card level-card">
                     <h4>Level 2: Before Prophethood</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">Arabian Peninsula prior to Islam, lineage, birth.</p>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #065f46; font-weight: 600; font-size: 0.85rem;">Lesson 2: The Year of the Elephant and Birth</span>
-                        <span class="status-badge">NOT STARTED</span>
-                    </div>
-                </div>
-
-                <div class="card level-card">
-                    <h4>Level 3: Early Makkah</h4>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">First revelation and public invitation.</p>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Lessons launching soon.</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1rem 0;">لەدایکبوون و منداڵی تا هاوسەرگیری.</p>
                 </div>
             </div>
         </section>
 
-        <!-- LESSONS PAGE -->
         <section id="lessons" class="page">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <div>
-                    <button class="btn btn-gray" style="font-size:0.8rem;">Student View</button>
-                    <button class="btn btn-gray" style="font-size:0.8rem;">Teacher Mode 🎓</button>
-                </div>
-                <div>
-                    <button class="btn btn-gray" style="font-size:0.8rem;">☆ Bookmark</button>
-                    <select class="select-control" style="font-size:0.8rem;"><option>Status: Not Started</option></select>
-                </div>
-            </div>
-
             <div class="card">
-                <div style="display: flex; justify-content: space-between;">
-                    <h2>Lesson 1: What is the Seerah and Why Study It?</h2>
-                    <span style="background: #dcfce7; color: #166534; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">AUTHENTIC</span>
-                </div>
-                <h4 style="margin-top: 1rem;">Explanation</h4>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">The word 'Seerah' means a path or biography. Studying the Seerah means learning how Prophet Muhammad ﷺ lived his life as a leader, husband, teacher, and servant of Allah.</p>
-            </div>
-
-            <div class="card">
-                <h3>Lesson Checkup Quiz</h3>
-                <p style="margin-top: 0.5rem;"><strong>What does the word 'Seerah' literally mean?</strong></p>
-                <button class="quiz-opt">A legal ruling</button>
-                <button class="quiz-opt">A journey or path/biography</button>
-                <button class="quiz-opt">A battle strategy</button>
-                <button class="quiz-opt">A poetry collection</button>
+                <h2>Lesson 1: What is the Seerah?</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">The word 'Seerah' means a path or biography...</p>
             </div>
         </section>
 
-        <!-- ARJUZAH & QUIZ PAGE -->
         <section id="arjuzah" class="page">
             <h2 class="arabic">الأرجوزة السنية في ذكر سيرة خير البرية ﷺ</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">نظم: الأمين موافقي (أبو عبيدة الجزائري) - به دەنگی ظفر النتيفات</p>
-
-            <div class="card" style="background: #fefce8; border: 1px solid #fef08a; margin-top: 1rem;">
-                <h4>🎥 ڤیدیۆی الأرجوزة السنية / Video & Audio</h4>
-                <p style="font-size: 0.85rem; margin-top: 0.3rem;">دەتوانن گوێبیستی خوێندنەوەی «الأرجوزة السنية» ببیت لە یوتیوب به دەنگی ظفر النتيفات</p>
-                <a href="https://youtube.com" target="_blank" class="btn btn-green" style="margin-top: 0.8rem; font-size: 0.8rem;">بینیینی ڤیدیۆ لە YouTube</a>
+            
+            <div class="card" id="arjuzahSetupCard" style="margin-top: 1rem;">
+                <h3>⚙️ کویزی الأرجوزة السنية (Arjuzah Quiz)</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.4rem 0 1rem 0;">پرسیارەکان لەسەر مێژوو و هۆنراوەکەی الأرجوزة السنية:</p>
+                <button class="btn btn-green" onclick="startArjuzahQuiz()">دەستپێکردنی کویزی الأرجوزة 🚀</button>
             </div>
 
-            <div class="card">
-                <h4>🎯 سیستەمی کویزی داینامیکی (Quiz Generator)</h4>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">دیاری بکه: جۆری کویز، ژمارەی پرسیار، و زمانی وەڵامدانەوە</p>
-                <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-                    <div>
-                        <label style="font-size:0.8rem; font-weight:bold;">جۆری کویز:</label><br>
-                        <select class="select-control"><option>کویزی مانا و تێگەیشتن (Comprehension)</option></select>
-                    </div>
-                    <div>
-                        <label style="font-size:0.8rem; font-weight:bold;">ژمارەی پرسیار:</label><br>
-                        <select class="select-control"><option>5 پرسیار</option></select>
-                    </div>
-                    <div>
-                        <label style="font-size:0.8rem; font-weight:bold;">Language / زمان:</label><br>
-                        <select class="select-control"><option>کوردی (Kurdish)</option></select>
-                    </div>
+            <div id="arjuzahQuizContainer" class="card" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span id="arjuzahStepCounter" style="font-weight: bold; font-size: 0.9rem; color: var(--text-muted);"></span>
                 </div>
-                <button class="btn btn-green" style="margin-top: 1rem;">دروستکردنی کویز (Generate Quiz)</button>
+                <div class="progress-bar"><div class="progress-fill" id="arjuzahProgressBar"></div></div>
+                <div id="arjuzahStepsWrapper" style="margin-top: 1.5rem;"></div>
+                <div style="display: flex; justify-content: space-between; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    <button class="btn btn-gray" id="arjuzahPrevBtn" onclick="navigateArjuzah(-1)" disabled>← پێشوو</button>
+                    <button class="btn btn-green" id="arjuzahNextBtn" onclick="navigateArjuzah(1)">داهاتوو →</button>
+                </div>
             </div>
 
-            <div class="card arabic" style="direction: rtl; text-align: right; line-height: 2.2; font-size: 1.2rem;">
-                <h3>📜 دەقی تەواوی (الأرجوزة السنية في ذكر سيرة خير البرية)</h3>
-                <br>
-                1. الْحَمْدُ لِلَّهِ الَّذِي هَدَانَا ... لِدِينِهِ الْقَوِيمِ وَاجْتَبَانَا<br>
-                2. ثُمَّ الصَّلَاةُ وَالسَّلَامُ السَّارِي ... عَلَى الرَّسُولِ الْمُصْطَفَى الْمُخْتَارِ<br>
-                3. وَآلِهِ وَصَحْبِهِ الْأَبْرَارِ ... مَا غَرَّدَ الْقُمْرِيُّ فِي الْأَسْحَارِ<br>
-                4. وَبَعْدُ فَاعْلَمْ أَنَّ خَيْرَ السِّيرَةِ ... سِيرَةُ بَدْرِ الْأُمَّةِ الْمُنِيرَةِ<br>
+            <div id="arjuzahResultCard" class="card" style="display: none; text-align: center; padding: 2rem;">
+                <h2 style="color: #065f46;">🎉 پیرۆزە!</h2>
+                <div style="margin: 1rem 0; font-size: 2rem; font-weight: bold;" id="arjuzahResultScore"></div>
+                <button class="btn btn-green" onclick="resetArjuzahQuiz()">دووبارەکردنەوەی کویز 🔄</button>
+            </div>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3>🏆 تۆماری نمرەکانی الأرجوزة (Leaderboard)</h3>
+                <table class="leaderboard-table">
+                    <thead><tr><th>ناوی بەکارهێنەر</th><th>نمرە</th></tr></thead>
+                    <tbody id="arjuzahLeaderboardBody"><tr><td colspan="2" style="color: var(--text-muted);">هیچ تۆمارێک نییە هێشتا.</td></tr></tbody>
+                </table>
+            </div>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <h4>🎥 ڤیدیۆی الأرجوزة السنية</h4>
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/GxbhpgZrl6w" allowfullscreen></iframe>
+                </div>
             </div>
         </section>
 
-        <!-- ADVANCED MOVIE QUIZ PAGE (الرسالة) -->
         <section id="movie" class="page">
-            <h2>🎬 Extended Movie Quiz: The Message (فیلمی الرسالة)</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                کویزی تایبەت و تێروتەسەل بۆ فیلمی «الرسالة» بە پێنج زمانی جیاواز و بژارەی تایبەت.
-            </p>
-
-            <!-- Wikipedia Info Header -->
-            <div class="card" style="background: #f0f9ff; border: 1px solid #bae6fd;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                    <div>
-                        <h3>📖 دەربارەی فیلمەکە لە ویکیپیدیا (Wikipedia)</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">
-                            فیلمی "الرسالة" لە دەرهێنانی مصطفى العقادە و سەرگووژتەی سەرەتای ئیسلام پێشاندەدات.
-                        </p>
-                    </div>
-                    <a href="https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D8%B1%D8%B3%D8%A7%D9%84%D8%A9_(%D9%81%D9%8A%D9%84%D9%85)" target="_blank" class="btn btn-blue">
-                        🌐 زیاتر بخوێنەوە لە Wikipedia
-                    </a>
-                </div>
-            </div>
-
-            <!-- Quiz Setup Form -->
-            <div class="card">
-                <h3>⚙️ ڕێکخستنی کویزی فیلمەکە (Quiz Configuration)</h3>
+            <h2>🎬 Movie Quiz: The Message (فیلمی الرسالة)</h2>
+            
+            <div class="card" id="quizSetupCard" style="margin-top: 1rem;">
+                <h3>⚙️ ڕێکخستنی کویزی فیلمەکە</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                    
-                    <div>
-                        <label style="font-size: 0.85rem; font-weight: bold;">👤 ناوی قوتابی / Student Name:</label>
-                        <input type="text" id="studentName" class="input-control" style="width: 100%; margin-top: 0.4rem;" placeholder="ناوت بنووسە...">
-                    </div>
-
                     <div>
                         <label style="font-size: 0.85rem; font-weight: bold;">📊 ژمارەی پرسیارەکان:</label>
                         <select id="questionCount" class="select-control" style="width: 100%; margin-top: 0.4rem;">
-                            <option value="10">10 پرسیار</option>
-                            <option value="20">20 پرسیار</option>
-                            <option value="30">30 پرسیار</option>
+                            <option value="5">5 پرسیار</option>
                         </select>
                     </div>
-
                     <div>
-                        <label style="font-size: 0.85rem; font-weight: bold;">🌐 زمانی کویز / Language:</label>
+                        <label style="font-size: 0.85rem; font-weight: bold;">🌐 زمانی کویز:</label>
                         <select id="quizLang" class="select-control" style="width: 100%; margin-top: 0.4rem;">
                             <option value="ku">کوردی (Kurdish)</option>
                             <option value="ar">العربية (Arabic)</option>
                             <option value="en">English</option>
                         </select>
                     </div>
-
-                    <div>
-                        <label style="font-size: 0.85rem; font-weight: bold;">🎯 جۆری پرسیارەکان / Question Type:</label>
-                        <select id="quizType" class="select-control" style="width: 100%; margin-top: 0.4rem;">
-                            <option value="events">پرسیار لەسەر ڕووداوەکانی فیلمەکە (Movie Events)</option>
-                            <option value="vocab">پرسیار لەسەر مانای وشەکان (Word Meanings)</option>
-                        </select>
-                    </div>
-
                 </div>
-                <button class="btn btn-green" style="margin-top: 1.2rem;" onclick="generateMovieQuiz()">🚀 دەستپێکردنی کویز (Start Quiz)</button>
+                <button class="btn btn-green" style="margin-top: 1.2rem;" onclick="generateMovieQuiz()">دەستپێکردنی کویز 🚀</button>
             </div>
 
-            <!-- Quiz Questions Container -->
-            <div id="quizQuestionsContainer">
-                
-                <!-- Question 1: Movie Event -->
-                <div class="card" style="border-top: 4px solid #065f46;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <h3>پرسیاری 1: دەرهێنەری فیلمی بەناوبانگی «الرسالة» (1976) کێ بوو؟</h3>
-                        <span class="tag-badge">ڕووداوەکانی فیلم</span>
-                    </div>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">ژانر: زانیاری گشتی فیلم</p>
-                    
-                    <button class="quiz-opt" onclick="checkMovieAnswer(this, true, 'مصطفى_العقاد')">A) مصطفى العقاد (Moustapha Akkad)</button>
-                    <button class="quiz-opt" onclick="checkMovieAnswer(this, false, 'يوسف_شاهين')">B) يوسف شاهين</button>
-                    <button class="quiz-opt" onclick="checkMovieAnswer(this, false, 'صلاح_أبو_سيف')">C) صلاح أبو سيف</button>
-
-                    <!-- Wikipedia Dynamic Box -->
-                    <div class="wiki-alert">
-                        ❌ وەڵامەکەت هەڵەیە! زانیاری زیاتر بخوێنەوە لە: 
-                        <a href="#" target="_blank" class="btn btn-blue" style="font-size:0.75rem; padding: 0.3rem 0.6rem; margin-right:0.5rem;">
-                            📖 ویکیپیدیا (Wikipedia)
-                        </a>
-                    </div>
-
-                    <div class="scene-badge" onclick="jumpToScene('00:04:15', 'R9K1u9Z4Pxs')">
-                        🎬 Jump to Scene Segment (00:04:15 - ناساندنی سەرەتای فیلم)
-                    </div>
+            <div id="movieQuizContainer" class="card" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span id="quizStepCounter" style="font-weight: bold; font-size: 0.9rem; color: var(--text-muted);"></span>
                 </div>
-
-                <!-- Question 2: Vocabulary -->
-                <div class="card" style="border-top: 4px solid #0284c7;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <h3>پرسیاری 2: مانای دەستەواژەی "الوحي" چییە لە دیالۆگی فیلمەکەدا؟</h3>
-                        <span class="tag-badge" style="background:#e0f2fe; color:#0369a1;">مانای وشەکان</span>
-                    </div>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">ژانر: مانای وشە و دەستەواژەکان</p>
-                    
-                    <button class="quiz-opt" onclick="checkMovieAnswer(this, false, 'وحي')">A) نامەی بازرگانی</button>
-                    <button class="quiz-opt" onclick="checkMovieAnswer(this, true, 'وحي')">B) پەیامی خودایی کە بە هۆکاری سرووش بۆ پێغەمبەران دێت</button>
-                    <button class="quiz-opt" onclick="checkMovieAnswer(this, false, 'وحي')">C) شێعر و پەخشانی کۆن</button>
-
-                    <!-- Wikipedia Dynamic Box -->
-                    <div class="wiki-alert">
-                        ❌ وەڵامەکەت هەڵەیە! زانیاری زیاتر بخوێنەوە لە: 
-                        <a href="#" target="_blank" class="btn btn-blue" style="font-size:0.75rem; padding: 0.3rem 0.6rem; margin-right:0.5rem;">
-                            📖 ویکیپیدیا (Wikipedia)
-                        </a>
-                    </div>
-
-                    <div class="scene-badge" onclick="jumpToScene('00:22:40', 'R9K1u9Z4Pxs')">
-                        🎬 Jump to Scene Segment (00:22:40 - دابەزینی سرووش لە ئەشکەوتی حەڕا)
-                    </div>
+                <div class="progress-bar"><div class="progress-fill" id="quizProgressBar"></div></div>
+                <div id="quizStepsWrapper" style="margin-top: 1.5rem;"></div>
+                <div style="display: flex; justify-content: space-between; margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    <button class="btn btn-gray" id="prevBtn" onclick="navigateQuiz(-1)" disabled>← پێشوو</button>
+                    <button class="btn btn-green" id="nextBtn" onclick="navigateQuiz(1)">داهاتوو →</button>
                 </div>
+            </div>
 
+            <div id="quizResultCard" class="card" style="display: none; text-align: center; padding: 2.5rem 1.5rem;">
+                <h2 style="font-size: 2rem; color: #065f46;">🎉 پیرۆزە! کویزەکەت تەواو کرد</h2>
+                <div style="margin: 1.5rem 0; font-size: 2.5rem; font-weight: bold;" id="resultScore"></div>
+                <button class="btn btn-green" onclick="resetQuiz()">دووبارەکردنەوەی کویز 🔄</button>
+            </div>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3>🏆 تۆماری نمرەکانی فیلمی الرسالة (Leaderboard)</h3>
+                <table class="leaderboard-table">
+                    <thead><tr><th>ناوی بەکارهێنەر</th><th>نمرە</th></tr></thead>
+                    <tbody id="movieLeaderboardBody"><tr><td colspan="2" style="color: var(--text-muted);">هیچ تۆمارێک نییە هێشتا.</td></tr></tbody>
+                </table>
             </div>
         </section>
 
-        <!-- TIMELINE PAGE -->
         <section id="timeline" class="page">
-            <h2>Deep Timeline</h2>
-            <div class="card" style="margin-top:1rem;">
-                <p>Chronological events of Seerah will be displayed here.</p>
+            <h2>⏳ Deep Timeline (مێژووی ڕووداوەکان)</h2>
+            <div class="card" style="margin-top: 1rem;">
+                <h4>٥٧١ زایینی - ساڵی فیل</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">لەدایکبوونی پێغەمبەر محمد ﷺ لە شاری مەککە.</p>
             </div>
         </section>
 
-        <!-- IMPORTANT PEOPLE PAGE -->
         <section id="people" class="page">
-            <h2 style="margin-bottom: 1rem;">Important Figures in the Seerah</h2>
-            <div class="grid-3">
+            <h2>👥 Important People (کەسایەتییە دیارەکان)</h2>
+            <div class="grid-3" style="margin-top: 1rem;">
                 <div class="card">
-                    <h3>Khadijah bint Khuwaylid (RA)</h3>
-                    <span class="tag-badge">FIRST WIFE & BELIEVER</span>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.4rem;">
-                        A noble businesswoman who supported the Prophet ﷺ.
-                    </p>
-                </div>
-                <div class="card">
-                    <h3>Abu Bakr As-Siddiq (RA)</h3>
-                    <span class="tag-badge">CLOSEST COMPANION</span>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.4rem;">
-                        The first adult male to accept Islam without hesitation.
-                    </p>
+                    <h4>ئەبو بەکری سدیق (رضي الله عنه)</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">یەکەم خەلیفەی ڕاشدین و هاوڕێی نزیکی پێغەمبەر ﷺ لە کۆچکردندا.</p>
                 </div>
             </div>
         </section>
 
-        <!-- NOTES PAGE -->
         <section id="notes" class="page">
             <h2>My Notes</h2>
-            <div class="card" style="margin-top:1rem;">
-                <textarea class="input-control" style="width:100%; height:120px;" placeholder="Write down your insights..."></textarea>
-            </div>
+            <textarea class="input-control" style="width: 100%; height: 200px;" placeholder="تێبینییەکانت لێرە بنووسە..."></textarea>
         </section>
     </main>
 
     <script>
-        function switchTab(tabId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
-            const target = document.getElementById(tabId);
-            if (target) target.classList.add('active');
+        let loggedInUser = '';
 
-            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick')?.includes(tabId));
-            if (activeBtn) activeBtn.classList.add('active');
+        function handleLogin() {
+            const nameInput = document.getElementById('loginNameInput').value.trim();
+            if (!nameInput) {
+                alert('تکایە ناوی خۆت بنووسە!');
+                return;
+            }
+            loggedInUser = nameInput;
+            document.getElementById('currentUserDisplay').innerText = `(👤 ${loggedInUser})`;
+            document.getElementById('welcomeTitle').innerText = `Welcome, ${loggedInUser}!`;
+            document.getElementById('loginOverlay').style.display = 'none';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            const targetPage = document.getElementById(tabId);
+            const targetBtn = document.getElementById('tab-' + tabId);
+            
+            if (targetPage) targetPage.classList.add('active');
+            if (targetBtn) targetBtn.classList.add('active');
         }
 
         function toggleTheme() {
-            const cur = document.documentElement.getAttribute('data-theme');
-            document.documentElement.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+            const body = document.body;
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? '' : 'dark');
         }
 
-        // 1. فەنکشنی پشکنینی وەڵامەکان و دروستکردنی ئاگاداری ویکیپیدیا
-        function checkMovieAnswer(button, isCorrect, wikiTopic = 'الرسالة_(فيلم)') {
-            const parent = button.parentElement;
-            const options = parent.querySelectorAll('.quiz-opt');
-            const alertBox = parent.querySelector('.wiki-alert');
-            
-            options.forEach(opt => {
-                opt.style.background = 'var(--bg-card)';
-                opt.style.color = 'var(--text-main)';
+        // --- ARJUZAH QUIZ ---
+        const arjuzahQuestions = [
+            { 
+                q: "لە ساڵی چەنددا پێغەمبەر محمد ﷺ لەدایکبوو؟", 
+                opts: ["ساڵی فیل (٥٧١ زایینی)", "ساڵی کۆچکردن", "ساڵی حەوتەمی هیجری", "ساڵی حودەیبییە"], 
+                a: 0, 
+                explanation: "پێغەمبەر محمد ﷺ لە ساڵی فیل (٥٧١ زایینی) لە شاری مەککە لەدایکبووە.",
+                wiki: "https://ar.wikipedia.org/wiki/عام_الفيل",
+                videoEmbed: "https://www.youtube.com/embed/GxbhpgZrl6w"
+            },
+            { 
+                q: "ناوی باوکی پێغەمبەر محمد ﷺ چی بوو؟", 
+                opts: ["عبد الله بن عبد المطلب", "أبو طالب بن عبد المطلب", "حَمزَة بن عبد المطلب", "عَباس بن عبد المطلب"], 
+                a: 0, 
+                explanation: "باوکی پێغەمبەر (عەبدوڵڵا) بوو کە پێش لەدایکبوونی کۆچی دوایی کردبوو.",
+                wiki: "https://ar.wikipedia.org/wiki/عبد_الله_بن_عبد_المطلب",
+                videoEmbed: "https://www.youtube.com/embed/GxbhpgZrl6w"
+            }
+        ];
+
+        let arjuzahStep = 0;
+        let arjuzahAnswers = [];
+
+        function startArjuzahQuiz() {
+            arjuzahStep = 0;
+            arjuzahAnswers = new Array(arjuzahQuestions.length).fill(null);
+            document.getElementById('arjuzahSetupCard').style.display = 'none';
+            document.getElementById('arjuzahResultCard').style.display = 'none';
+            document.getElementById('arjuzahQuizContainer').style.display = 'block';
+            renderArjuzahSteps();
+            updateArjuzahView();
+        }
+
+        function renderArjuzahSteps() {
+            const wrapper = document.getElementById('arjuzahStepsWrapper');
+            wrapper.innerHTML = '';
+            arjuzahQuestions.forEach((qObj, qIdx) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = `quiz-step ${qIdx === 0 ? 'active' : ''}`;
+                stepDiv.id = `arjuzah-step-${qIdx}`;
+                let html = `<h3 style="font-size: 1.15rem; margin-bottom: 1rem;">${qIdx + 1}. ${qObj.q}</h3>`;
+                qObj.opts.forEach((opt, oIdx) => {
+                    html += `<button class="quiz-opt" id="arj-opt-${qIdx}-${oIdx}" onclick="selectArjuzahAnswer(${qIdx}, ${oIdx})">${opt}</button>`;
+                });
+                // بۆکس بۆ ڕوونکردنەوەی ویکیپیدیا و ڤیدیۆ کاتێک وەڵام هەڵە دەبێت
+                html += `<div class="explanation-box" id="arj-exp-${qIdx}">
+                            <p><strong>💡 ڕوونکردنەوە:</strong> ${qObj.explanation}</p>
+                            <p style="margin-top: 0.5rem;"><a href="${qObj.wiki}" target="_blank" style="color: #2563eb; font-weight: bold;">📚 خوێندنەوەی زیاتر لە ویکیپیدیا ↗</a></p>
+                            <div class="video-container" style="margin-top: 0.8rem;">
+                                <iframe src="${qObj.videoEmbed}" allowfullscreen></iframe>
+                            </div>
+                         </div>`;
+                stepDiv.innerHTML = html;
+                wrapper.appendChild(stepDiv);
             });
+        }
 
-            if (isCorrect) {
-                button.style.background = '#dcfce7';
-                button.style.color = '#15803d';
-                button.style.borderColor = '#86efac';
-                if (alertBox) alertBox.style.display = 'none';
-            } else {
-                button.style.background = '#fee2e2';
-                button.style.color = '#b91c1c';
-                button.style.borderColor = '#fca5a5';
-
-                if (alertBox) {
-                    const wikiLink = alertBox.querySelector('a');
-                    wikiLink.href = `https://ar.wikipedia.org/wiki/${encodeURIComponent(wikiTopic)}`;
-                    alertBox.style.display = 'block';
+        function selectArjuzahAnswer(qIdx, oIdx) {
+            arjuzahAnswers[qIdx] = oIdx;
+            const qObj = arjuzahQuestions[qIdx];
+            const stepDiv = document.getElementById(`arjuzah-step-${qIdx}`);
+            const expBox = document.getElementById(`arj-exp-${qIdx}`);
+            
+            stepDiv.querySelectorAll('.quiz-opt').forEach((btn, idx) => {
+                btn.classList.remove('selected', 'correct', 'wrong');
+                if (idx === oIdx) {
+                    btn.classList.add('selected');
+                    if (idx === qObj.a) {
+                        btn.classList.add('correct');
+                        expBox.style.display = 'none'; // ئەگەر ڕاست بوو ڕوونکردنەوە نابینرێت
+                    } else {
+                        btn.classList.add('wrong');
+                        expBox.style.display = 'block'; // ئەگەر هەڵە بوو ڕوونکردنەوە و ڤیدیۆ دەردەکەوێت
+                    }
                 }
-            }
+            });
         }
 
-        // 2. فەنکشنی سەرەکی بۆ چوونی ڕاستەوخۆ بۆ ناو یوتیوب
-        function jumpToScene(timestamp, youtubeVideoId = 'R9K1u9Z4Pxs') {
-            const parts = timestamp.split(':');
-            let seconds = 0;
-
-            if (parts.length === 3) {
-                seconds = (+parts[0]) * 3600 + (+parts[1]) * 60 + (+parts[2]);
-            } else if (parts.length === 2) {
-                seconds = (+parts[0]) * 60 + (+parts[1]);
-            }
-
-            const youtubeUrl = `https://www.youtube.com/watch?v=${youtubeVideoId}&t=${seconds}s`;
-            window.open(youtubeUrl, '_blank', 'noopener,noreferrer');
-        }
-
-        function generateMovieQuiz() {
-            const name = document.getElementById('studentName').value;
-            const count = document.getElementById('questionCount').value;
-            const lang = document.getElementById('quizLang').value;
-            const type = document.getElementById('quizType').value;
-
-            if (!name) {
-                alert('تکایە پێشتر ناوی قوتابی بنووسە!');
+        function navigateArjuzah(dir) {
+            arjuzahStep += dir;
+            if (arjuzahStep >= arjuzahQuestions.length) {
+                finishArjuzahQuiz();
                 return;
             }
-
-            alert(`کویز چالاک کرا بۆ قوتابی: ${name}\nژمارەی پرسیار: ${count}\nزمان: ${lang}\nجۆری پرسیار: ${type}`);
+            updateArjuzahView();
         }
+
+        function updateArjuzahView() {
+            const total = arjuzahQuestions.length;
+            document.querySelectorAll('#arjuzahQuizContainer .quiz-step').forEach((s, idx) => {
+                s.classList.toggle('active', idx === arjuzahStep);
+            });
+            document.getElementById('arjuzahStepCounter').innerText = `Question ${arjuzahStep + 1} of ${total}`;
+            document.getElementById('arjuzahProgressBar').style.width = `${((arjuzahStep + 1) / total) * 100}%`;
+            document.getElementById('arjuzahPrevBtn').disabled = arjuzahStep === 0;
+            document.getElementById('arjuzahNextBtn').innerText = arjuzahStep === total - 1 ? 'تەواوکردن ✔️' : 'داهاتوو →';
+        }
+
+        function finishArjuzahQuiz() {
+            let score = 0;
+            arjuzahQuestions.forEach((qObj, idx) => {
+                if (arjuzahAnswers[idx] === qObj.a) score++;
+            });
+            document.getElementById('arjuzahQuizContainer').style.display = 'none';
+            const resCard = document.getElementById('arjuzahResultCard');
+            document.getElementById('arjuzahResultScore').innerText = `${score} / ${arjuzahQuestions.length}`;
+            resCard.style.display = 'block';
+            saveLeaderboard('arjuzah', loggedInUser, score);
+        }
+
+        function resetArjuzahQuiz() {
+            document.getElementById('arjuzahResultCard').style.display = 'none';
+            document.getElementById('arjuzahSetupCard').style.display = 'block';
+        }
+
+        // --- MOVIE QUIZ ---
+        const movieQuestions = {
+            ku: [
+                { 
+                    q: "کێ دەرهێنەری فیلمی (الرسالة) بوو؟", 
+                    opts: ["مصطفى العقاد", "یوسف شاهین", "صلاح أبو سيف", "عاطف الطيب"], 
+                    a: 0, 
+                    explanation: "مصطفى العقاد دەرهێنەری ناوداری سوری-ئەمریکی بوو کە فیلمی مێژوویی الرسالة و عمیرەی دروستکرد.",
+                    wiki: "https://ar.wikipedia.org/wiki/الرسالة_(فيلم)",
+                    videoEmbed: "https://www.youtube.com/embed/GxbhpgZrl6w"
+                },
+                { 
+                    q: "کێ ڕۆڵی حەمزەی کوڕی عەبدولموتەلیبی دەگێڕا لە وەشانی عەرەبیدا؟", 
+                    opts: ["عەبدوڵڵا غەیس", "مەحمود یاسین", "ئەحمەد زەکی", "نور الشريف"], 
+                    a: 0, 
+                    explanation: "ئەکتەری بەناوبانگی میسری عەبدوڵڵا غەیس ڕۆڵی شایستەی حەمزەی جێبەجێ کرد.",
+                    wiki: "https://ar.wikipedia.org/wiki/عبد_الله_غيث",
+                    videoEmbed: "https://www.youtube.com/embed/GxbhpgZrl6w"
+                }
+            ]
+        };
+
+        let currentStep = 0;
+        let activeQuestions = [];
+        let userAnswers = [];
+
+        function generateMovieQuiz() {
+            const lang = document.getElementById('quizLang').value;
+            activeQuestions = movieQuestions[lang] || movieQuestions['ku'];
+            userAnswers = new Array(activeQuestions.length).fill(null);
+            currentStep = 0;
+
+            document.getElementById('quizSetupCard').style.display = 'none';
+            document.getElementById('quizResultCard').style.display = 'none';
+            document.getElementById('movieQuizContainer').style.display = 'block';
+
+            renderMovieSteps();
+            updateMovieView();
+        }
+
+        function renderMovieSteps() {
+            const wrapper = document.getElementById('quizStepsWrapper');
+            wrapper.innerHTML = '';
+            activeQuestions.forEach((qObj, qIdx) => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = `quiz-step ${qIdx === 0 ? 'active' : ''}`;
+                stepDiv.id = `movie-step-${qIdx}`;
+                let html = `<h3 style="font-size: 1.15rem; margin-bottom: 1rem;">${qIdx + 1}. ${qObj.q}</h3>`;
+                qObj.opts.forEach((opt, oIdx) => {
+                    html += `<button class="quiz-opt" id="movie-opt-${qIdx}-${oIdx}" onclick="selectMovieAnswer(${qIdx}, ${oIdx})">${opt}</button>`;
+                });
+                html += `<div class="explanation-box" id="movie-exp-${qIdx}">
+                            <p><strong>💡 ڕوونکردنەوە:</strong> ${qObj.explanation}</p>
+                            <p style="margin-top: 0.5rem;"><a href="${qObj.wiki}" target="_blank" style="color: #2563eb; font-weight: bold;">📚 خوێندنەوەی زیاتر لە ویکیپیدیا ↗</a></p>
+                            <div class="video-container" style="margin-top: 0.8rem;">
+                                <iframe src="${qObj.videoEmbed}" allowfullscreen></iframe>
+                            </div>
+                         </div>`;
+                stepDiv.innerHTML = html;
+                wrapper.appendChild(stepDiv);
+            });
+        }
+
+        function selectMovieAnswer(qIdx, oIdx) {
+            userAnswers[qIdx] = oIdx;
+            const qObj = activeQuestions[qIdx];
+            const stepDiv = document.getElementById(`movie-step-${qIdx}`);
+            const expBox = document.getElementById(`movie-exp-${qIdx}`);
+            
+            stepDiv.querySelectorAll('.quiz-opt').forEach((btn, idx) => {
+                btn.classList.remove('selected', 'correct', 'wrong');
+                if (idx === oIdx) {
+                    btn.classList.add('selected');
+                    if (idx === qObj.a) {
+                        btn.classList.add('correct');
+                        expBox.style.display = 'none';
+                    } else {
+                        btn.classList.add('wrong');
+                        expBox.style.display = 'block';
+                    }
+                }
+            });
+        }
+
+        function navigateQuiz(dir) {
+            currentStep += dir;
+            if (currentStep >= activeQuestions.length) {
+                finishMovieQuiz();
+                return;
+            }
+            updateMovieView();
+        }
+
+        function updateMovieView() {
+            const total = activeQuestions.length;
+            document.querySelectorAll('#movieQuizContainer .quiz-step').forEach((s, idx) => {
+                s.classList.toggle('active', idx === currentStep);
+            });
+            document.getElementById('quizStepCounter').innerText = `Question ${currentStep + 1} of ${total}`;
+            document.getElementById('quizProgressBar').style.width = `${((currentStep + 1) / total) * 100}%`;
+            document.getElementById('prevBtn').disabled = currentStep === 0;
+            document.getElementById('nextBtn').innerText = currentStep === total - 1 ? 'تەواوکردن ✔️' : 'داهاتوو →';
+        }
+
+        function finishMovieQuiz() {
+            let score = 0;
+            activeQuestions.forEach((qObj, idx) => {
+                if (userAnswers[idx] === qObj.a) score++;
+            });
+            document.getElementById('movieQuizContainer').style.display = 'none';
+            const resCard = document.getElementById('quizResultCard');
+            document.getElementById('resultScore').innerText = `${score} / ${activeQuestions.length}`;
+            resCard.style.display = 'block';
+            saveLeaderboard('movie', loggedInUser, score);
+        }
+
+        function resetQuiz() {
+            document.getElementById('quizResultCard').style.display = 'none';
+            document.getElementById('quizSetupCard').style.display = 'block';
+        }
+
+        function saveLeaderboard(type, user, score) {
+            let data = JSON.parse(localStorage.getItem('seerah_lb_' + type) || '[]');
+            data.push({ user, score });
+            data.sort((a, b) => b.score - a.score);
+            localStorage.setItem('seerah_lb_' + type, JSON.stringify(data));
+            renderLeaderboard(type);
+        }
+
+        function renderLeaderboard(type) {
+            let data = JSON.parse(localStorage.getItem('seerah_lb_' + type) || '[]');
+            const tbody = document.getElementById(type === 'arjuzah' ? 'arjuzahLeaderboardBody' : 'movieLeaderboardBody');
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" style="color: var(--text-muted);">هیچ تۆمارێک نییە هێشتا.</td></tr>`;
+                return;
+            }
+            let html = '';
+            data.forEach((item, idx) => {
+                html += `<tr><td>${idx + 1}. ${item.user}</td><td><strong>${item.score}</strong></td></tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        renderLeaderboard('arjuzah');
+        renderLeaderboard('movie');
     </script>
 </body>
 </html>
